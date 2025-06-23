@@ -1,103 +1,104 @@
-import Image from "next/image";
+"use client"
 
-export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+import { AuroraText } from "@/components/atoms/AuroraText"
+import { MorphingText } from "@/components/atoms/MorphingText"
+import { Button } from "@/components/ui/button"
+import { useIsMobile } from "@/hooks/use-mobile"
+import { motion } from "framer-motion"
+import { Rocket } from "lucide-react"
+import Image from "next/image"
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+const Home = () => {
+
+	const isMobile = useIsMobile()
+
+	return (
+		<div className="size-full flex">
+			<div className="flex w-full md:h-full min-h-[600px] max-h-[1000px] mx-auto items-end justify-center overflow-hidden relative">
+				<div className="flex w-full h-full">
+					<motion.div
+						initial={{ y: 50, opacity: 0 }}
+						animate={{ y: 0, opacity: 1 }}
+						transition={{ duration: 2, delay: 1, ease: "easeInOut" }}
+						className="flex h-full items-center justify-center w-full"
+					>
+						<span className="flex size-full translate-y-80 min-w-40 aspect-square max-w-full bg-blue-600/40 rounded-full blur-[300px]"></span>
+					</motion.div>
+					<div className="flex absolute z-10 bottom-0 inset-x-0 items-end justify-center h-full w-full">
+						<motion.div
+							initial={{ y: 50, opacity: 0 }}
+							animate={{ y: 0, opacity: 1 }}
+							transition={{ duration: 1.5, delay: 0.5, ease: "easeInOut" }}
+							className="flex w-full h-full md:h-[90%] relative justify-center"
+						>
+							<motion.div
+								initial={{ x: 0 }}
+								animate={{ x: isMobile ? 0 : 350 }}
+								transition={{ duration: 2.5, delay: 2, ease: "easeInOut" }}
+								className="flex w-full max-w-2xl relative">
+								<Image
+									src={"/assets/banner-img/hero-img.avif"}
+									alt="Hero Image"
+									fill
+									className="object-contain object-bottom"
+								/>
+							</motion.div>
+						</motion.div>
+					</div>
+				</div>
+				<motion.div
+					initial={{ y: 50, opacity: 0 }}
+					animate={{ y: 0, opacity: 1 }}
+					transition={{ duration: 2.5, delay: 2, ease: "easeInOut" }}
+					className="flex w-full h-full absolute top-0 z-20 inset-0 md:items-center ,md:justify-center"
+				>
+
+					<motion.div
+						initial={{ y: 50, opacity: 0 }}
+						animate={{ y: 0, opacity: 1 }}
+						transition={{ duration: 2.5, delay: 3, ease: "easeInOut" }}
+						className="flex flex-col gap-4 md:gap-6 px-4 py-8 w-full max-w-7xl mx-auto">
+						<h1 className="flex font-mono flex-col text-3xl lg:text-4xl xl:text-5xl font-bold max-w-xl gap-4 w-full">
+							<span className="w-fit">Autonomous</span>
+							<span className="w-fit space-x-4">
+								<span className="bg-white w-fit text-purple-500 rounded-lg px-4 py-0.5">
+									<AuroraText>AI Agents</AuroraText>
+								</span>
+								<span className="w-fit">
+									Built
+								</span>
+							</span>
+							<span className="w-fit flex gap-3"> for
+								<MorphingText texts={
+									[
+										"Interviews",
+										"Developers",
+										"Tech Jobs",
+										"Job Skills",
+										"Mock Rounds",
+										"First Job",
+										"Confidence",
+										"Growth",
+										"Coding",
+										"Success"
+									]
+								}
+								/>
+							</span>
+						</h1>
+						<p className="text-sm md:text-base lg:text-lg max-w-xl">
+							Plane AI empowers businesses with next-gen autonomous agents that learn, adapt, and act - in real-time, across systems, at scale.
+						</p>
+						<Button
+							className="w-fit bg-purple-500 text-white hover:text-purple-500"
+						>
+							Get Started <Rocket />
+						</Button>
+					</motion.div>
+				</motion.div>
+			</div>
+		</div>
+	)
 }
+
+export default Home
