@@ -35,7 +35,7 @@ export default function RootLayout({
     return (
         <html lang="en" suppressHydrationWarning>
             <body
-                className={`${geistSans.variable} ${geistMono.variable} h-dvh w-screen overflow-hidden bg-gray-50 dark:bg-gray-950 text-gray-950 dark:text-gray-50 antialiased`}>
+                className={`${geistSans.variable} ${geistMono.variable} h-dvh w-screen overflow-hidden bg-neutral-50 dark:bg-neutral-950 text-neutral-950 dark:text-neutral-50 antialiased`}>
                 <ThemeProvider
                     attribute="class"
                     defaultTheme="dark"
