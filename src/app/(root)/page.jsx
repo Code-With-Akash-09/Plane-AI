@@ -7,6 +7,7 @@ import { useIsMobile } from "@/hooks/use-mobile"
 import { motion } from "framer-motion"
 import { Rocket } from "lucide-react"
 import Image from "next/image"
+import Link from "next/link"
 
 const Home = () => {
 
@@ -89,10 +90,12 @@ const Home = () => {
 						<p className="text-sm md:text-base lg:text-lg max-w-xl">
 							Plane AI empowers businesses with next-gen autonomous agents that learn, adapt, and act - in real-time, across systems, at scale.
 						</p>
-						<Button
-							className="w-fit bg-purple-500 text-white hover:text-purple-500"
-						>
-							Get Started <Rocket />
+						<Button asChild className={"cursor-pointer"}>
+							<Link href={"/agents"}
+								className="w-fit bg-purple-500 text-white hover:text-purple-500"
+							>
+								Get Started <Rocket />
+							</Link>
 						</Button>
 					</motion.div>
 				</motion.div>

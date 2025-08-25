@@ -1,9 +1,13 @@
+import ProtectedRoute from "@/components/molecules/auth/ProtectedRoute"
+
 const AgentsLayout = ({ children }) => {
     return (
         <>
-            <div className="flex size-full">
-                {children}
-            </div >
+            <ProtectedRoute>
+                <div className="flex size-full">
+                    {children}
+                </div >
+            </ProtectedRoute>
         </>
     )
 }
