@@ -1,5 +1,6 @@
 import { ThemeProvider } from "@/components/atoms/ThemeProvider";
 import { Toaster } from "@/components/ui/sonner";
+import { AuthProvider } from "@/providers/AuthProvider";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -37,7 +38,9 @@ export default function MainLayout({ children }) {
                     enableSystem
                     disableTransitionOnChange
                 >
-                    {children}
+                    <AuthProvider>
+                        {children}
+                    </AuthProvider>
                     <Toaster richColors />
                 </ThemeProvider>
             </body>
