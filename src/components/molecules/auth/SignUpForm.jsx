@@ -119,7 +119,7 @@ const SignUpForm = () => {
                         type="submit"
                         disabled={
                             form.formState.isSubmitting ||
-                            form.formState.isValid ||
+                            !form.formState.isValid ||
                             loading
                         }
                         className={"w-full text-white bg-purple-500 hover:text-purple-500"}>
