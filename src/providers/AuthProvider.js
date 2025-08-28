@@ -19,22 +19,43 @@ const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true)
     const supabase = createClient()
 
-    const signUp = async (email, phone, password, name) => {
-        let { data, error } = await supabase.auth.signUp({
-            email,
-            phone,
-            password,
+    const signUp = async (values) => {
+        const { data, error } = await supabase.auth.signUp({
+            email: values.email.toLowerCase().trim(),
+            password: values.password,
             options: {
-                data: { name: name }
+                data: {
+                    name: values.name,
+                    mobile: values.mobile,
+                }
             }
         })
+
+        if (error) {
+            return { data, error };
+        }
+
+        const user = data.user;
+
+        if (user) {
+            await supabase
+                .from("Profiles")
+                .insert([
+                    {
+                        uid: data.user.id,
+                        email: data.user.email,
+                        name: values.name,
+                        mobile: values.mobile,
+                    }
+                ])
+        }
         return { data, error }
     }
 
-    const signIn = async (email, password) => {
+    const signIn = async (values) => {
         let { data, error } = await supabase.auth.signInWithPassword({
-            email,
-            password
+            email: values.email,
+            password: values.password
         })
         return { data, error }
     }

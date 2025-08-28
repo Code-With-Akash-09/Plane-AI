@@ -3,12 +3,19 @@
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { useAuth } from "@/providers/AuthProvider"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import z from "zod"
 
 const SignInForm = () => {
+
+    const [loading, setLoading] = useState(false)
+    const { signIn } = useAuth()
+    const router = useRouter()
 
     const form = useForm({
         resolver: zodResolver(SignInFormSchema),
@@ -18,14 +25,18 @@ const SignInForm = () => {
         },
     })
 
-    const onSubmit = (data) => {
-        toast("You submitted the following values", {
-            description: (
-                <pre className="mt-2 w-[320px] rounded-md bg-neutral-950 p-4">
-                    <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-                </pre>
-            ),
-        })
+    const onSubmit = async (values) => {
+        setLoading(true)
+        const { error } = await signIn(values)
+
+        if (error) {
+            toast.warning(error.message)
+        }
+        else {
+            toast.success("Account Logged in successfully!")
+            router.push("/agents")
+        }
+        setLoading(false)
     }
 
     return (
@@ -41,7 +52,7 @@ const SignInForm = () => {
                                     <FormLabel>Email</FormLabel>
                                     <FormControl>
                                         <Input
-                                            type={"email"}
+                                            type="email"
                                             placeholder="Enter Your Email"
                                             {...field}
                                         />
@@ -58,7 +69,7 @@ const SignInForm = () => {
                                     <FormLabel>Password</FormLabel>
                                     <FormControl>
                                         <Input
-                                            type={"password"}
+                                            type="password"
                                             placeholder="Enter Your Password"
                                             {...field}
                                         />
@@ -68,7 +79,16 @@ const SignInForm = () => {
                             )}
                         />
                     </div>
-                    <Button type="submit" className={"w-full text-white bg-purple-500 hover:text-purple-500"}>Get Started</Button>
+                    <Button
+                        type="submit"
+                        disabled={
+                            form.formState.isSubmitting ||
+                            form.formState.isValid ||
+                            loading
+                        }
+                        className={"w-full text-white bg-purple-500 hover:text-purple-500"}>
+                        {loading ? "Loading..." : "Get Started"}
+                    </Button>
                 </form>
             </Form>
         </>
@@ -80,7 +100,10 @@ export default SignInForm
 const SignInFormSchema = z.object({
     email: z
         .string()
-        .email({ message: "Please enter a valid email address" }),
+        .email({ message: "Please enter a valid email address" })
+        .regex(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/)
+        .toLowerCase()
+        .trim(),
     password: z
         .string()
         .min(6, { message: "Password must be at least 6 characters long" })
