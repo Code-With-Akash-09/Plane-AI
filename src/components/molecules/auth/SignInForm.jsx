@@ -1,5 +1,6 @@
 "use client"
 
+import Loading from "@/components/atoms/loading"
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
@@ -87,7 +88,7 @@ const SignInForm = () => {
                             loading
                         }
                         className={"w-full text-white bg-purple-500 hover:text-purple-500"}>
-                        {loading ? "Loading..." : "Get Started"}
+                        {loading ? <Loading /> : "Get Started"}
                     </Button>
                 </form>
             </Form>
