@@ -3,31 +3,42 @@
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { useAuth } from "@/providers/AuthProvider"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import z from "zod"
 
 const SignUpForm = () => {
 
+    const [loading, setLoading] = useState(false)
+    const { signUp } = useAuth()
+    const router = useRouter()
+
     const form = useForm({
         resolver: zodResolver(SignUpFormSchema),
         defaultValues: {
             name: "",
             email: "",
-            phone: "",
+            mobile: "",
             password: "",
         },
     })
 
-    const onSubmit = (data) => {
-        toast("You submitted the following values", {
-            description: (
-                <pre className="mt-2 w-[320px] rounded-md bg-neutral-950 p-4">
-                    <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-                </pre>
-            ),
-        })
+    const onSubmit = async (values) => {
+        setLoading(true)
+        const { error } = await signUp(values)
+
+        if (error) {
+            toast.warning(error.message)
+        }
+        else {
+            toast.success("Account created successfully!")
+            router.push("/agents")
+        }
+        setLoading(false)
     }
 
     return (
@@ -43,7 +54,7 @@ const SignUpForm = () => {
                                     <FormLabel>Name</FormLabel>
                                     <FormControl>
                                         <Input
-                                            type={"text"}
+                                            type="text"
                                             placeholder="Enter Your Name"
                                             {...field}
                                         />
@@ -60,7 +71,7 @@ const SignUpForm = () => {
                                     <FormLabel>Email</FormLabel>
                                     <FormControl>
                                         <Input
-                                            type={"email"}
+                                            type="email"
                                             placeholder="Enter Your Email"
                                             {...field}
                                         />
@@ -71,13 +82,13 @@ const SignUpForm = () => {
                         />
                         <FormField
                             control={form.control}
-                            name="phone"
+                            name="mobile"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Mobile Number</FormLabel>
                                     <FormControl>
                                         <Input
-                                            type={"number"}
+                                            type="number"
                                             placeholder="Enter You Mobile No"
                                             {...field}
                                         />
@@ -94,7 +105,7 @@ const SignUpForm = () => {
                                     <FormLabel>Password</FormLabel>
                                     <FormControl>
                                         <Input
-                                            type={"password"}
+                                            type="password"
                                             placeholder="Enter Your Password"
                                             {...field}
                                         />
@@ -104,7 +115,16 @@ const SignUpForm = () => {
                             )}
                         />
                     </div>
-                    <Button type="submit" className={"w-full text-white bg-purple-500 hover:text-purple-500"}>Register</Button>
+                    <Button
+                        type="submit"
+                        disabled={
+                            form.formState.isSubmitting ||
+                            form.formState.isValid ||
+                            loading
+                        }
+                        className={"w-full text-white bg-purple-500 hover:text-purple-500"}>
+                        {loading ? "Loading..." : "Register"}
+                    </Button>
                 </form>
             </Form>
         </>
@@ -120,11 +140,15 @@ const SignUpFormSchema = z.object({
         .max(100, { message: "Name cannot be longer than 100 characters" }),
     email: z
         .string()
-        .email({ message: "Please enter a valid email address" }),
-    phone: z
+        .email({ message: "Please enter a valid email address" })
+        .regex(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/)
+        .toLowerCase()
+        .trim(),
+    mobile: z
         .string()
-        .min(10, { message: "Phone number must be at least 10 digits" })
-        .max(15, { message: "Phone number cannot exceed 15 digits" }),
+        .min(10, { message: "Mobile number must be at least 10 digits" })
+        .max(15, { message: "Mobile number cannot exceed 15 digits" })
+        .trim(),
     password: z
         .string()
         .min(6, { message: "Password must be at least 6 characters long" })
