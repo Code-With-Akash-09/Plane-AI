@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion"
 import Link from "next/link"
+import Logo from "../atoms/Logo"
 
 const Navbar = () => {
     return (
@@ -13,7 +14,14 @@ const Navbar = () => {
                 className="flex fixed z-50 top-6 w-full items-center justify-center"
             >
                 <div className="w-fit bg-white backdrop-blur-2xl p-2 rounded-full">
-                    <div className="w-fit inline-flex space-x-2">
+                    <div className="w-fit inline-flex space-x-2 items-center">
+                        <div className="flex w-fit border-r border-neutral-400">
+                            <Logo
+                                link
+                                aurora
+                                className={"text-black !text-lg px-3"}
+                            />
+                        </div>
                         {
                             NavItems.map((item, i) => (
                                 <div key={i} className="w-fit">

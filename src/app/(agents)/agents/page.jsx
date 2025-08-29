@@ -3,7 +3,7 @@ import AIAgents from "@/components/molecules/agents/AIAgents"
 
 const Agents = () => {
     return (
-        <div className="size-full px-4 py-6">
+        <div className="flex-1 px-4 py-6 w-full overflow-y-auto">
             <div className="flex flex-col w-full max-w-7xl mx-auto">
                 <AgentsHome />
                 <AIAgents />

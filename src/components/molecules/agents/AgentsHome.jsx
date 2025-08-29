@@ -9,7 +9,7 @@ const AgentsHome = () => {
                 </div>
                 <div className="z-10 border border-neutral-800 p-6 md:p-8 lg:p-10 xl:p-14 w-full rounded-3xl bg-[url('/assets/banner-img/loading.avif')] bg-contain bg-right md:bg-left bg-no-repeat md:justify-end flex">
                     <div className="space-y-2 md:space-y-4 w-full md:w-2/3 lg:w-3/4 backdrop-blur-sm p-4 rounded-2xl">
-                        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl md:text-purple-500/100 font-semibold">
+                        <h1 className="font-mono text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl md:text-purple-500/100 font-semibold">
                             All-in-One <br /> AI Agents Platform
                         </h1>
                         <p className="text-sm md:text-base">
