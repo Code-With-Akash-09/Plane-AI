@@ -1,12 +1,16 @@
 import ProtectedRoute from "@/components/molecules/auth/ProtectedRoute"
+import AiNavbar from "@/components/organism/agents/AiNavbar"
 
 const AgentsLayout = ({ children }) => {
     return (
         <>
             <ProtectedRoute>
-                <div className="flex size-full overflow-y-auto">
-                    {children}
-                </div >
+                <div className="flex flex-col size-full">
+                    <AiNavbar />
+                    <div className="flex flex-1 w-full h-[calc(100vh-56px)]">
+                        {children}
+                    </div >
+                </div>
             </ProtectedRoute>
         </>
     )

@@ -1,4 +1,5 @@
 import AuroraBackground from "@/components/atoms/AuroraBackground"
+import Logo from "@/components/atoms/Logo"
 
 const AuthLayout = ({ children }) => {
     return (
@@ -7,7 +8,11 @@ const AuthLayout = ({ children }) => {
                 <div className="flex w-full h-full relative md:rounded-4xl md:border md:border-neutral-800">
                     <AuroraBackground className="md:rounded-4xl" />
                 </div>
-                <div className="flex absolute md:relative z-10 w-full h-full items-center justify-center md:bg-neutral-900 md:backdrop-blur-sm md:rounded-4xl border border-neutral-800 inset-shadow-sm inset-shadow-blue-600">
+                <div className="flex flex-col absolute md:relative z-10 w-full h-full items-center justify-center md:bg-neutral-900 md:backdrop-blur-sm md:rounded-4xl border border-neutral-800 inset-shadow-sm inset-shadow-blue-600 space-y-4">
+                    <Logo
+                        link
+                        sparkles
+                    />
                     {children}
                 </div>
             </div>
