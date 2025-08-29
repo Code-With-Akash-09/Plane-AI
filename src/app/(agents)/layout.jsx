@@ -4,7 +4,7 @@ const AgentsLayout = ({ children }) => {
     return (
         <>
             <ProtectedRoute>
-                <div className="flex size-full">
+                <div className="flex size-full overflow-y-auto">
                     {children}
                 </div >
             </ProtectedRoute>
