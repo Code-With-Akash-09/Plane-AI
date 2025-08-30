@@ -29,6 +29,6 @@ const Agents = [
         id: 1,
         name: "Interview Preparation",
         image: "/assets/banner-img/interview-preparation.avif",
-        url: "./interview-preparation"
+        url: "./agents/interview-preparation"
     },
 ]
