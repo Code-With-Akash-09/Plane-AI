@@ -11,7 +11,7 @@ const AiNavbar = () => {
     return (
         <>
             <header className="w-full">
-                <div className="flex w-full max-w-7xl mx-auto items-center justify-between h-14 border-b">
+                <div className="flex w-full max-w-7xl mx-auto items-center justify-between h-14 border-b px-4 md:px-0">
                     <div className="flex w-fit">
                         <Logo link />
                     </div>
