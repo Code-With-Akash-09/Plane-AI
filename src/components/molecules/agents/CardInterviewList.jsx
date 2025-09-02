@@ -1,6 +1,6 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 
-const InterviewList = () => {
+const CardInterviewList = () => {
     return (
         <>
             <Table>
@@ -33,8 +33,7 @@ const InterviewList = () => {
     )
 }
 
-export default InterviewList
-
+export default CardInterviewList
 
 const PreviousInterviews = [
     {

@@ -6,18 +6,24 @@ import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Sheet, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import { Sheet, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { Textarea } from "@/components/ui/textarea"
 import { DifficultyLevels, Skills } from "@/constant/agents/agents"
+import { createClient } from "@/lib/supabase/client"
+import { useAuth } from "@/providers/AuthProvider"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { PlusIcon } from "lucide-react"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
+import { toast } from "sonner"
 import z from "zod"
 
 const CreateInterview = () => {
 
+    const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
+    const { user } = useAuth()
+    const supabase = createClient()
 
     const form = useForm({
         resolver: zodResolver(CreateInterviewSchema),
@@ -30,18 +36,42 @@ const CreateInterview = () => {
     })
 
     const onSubmit = async (values) => {
-        console.log(values)
+        setLoading(true)
+        const { data, error } = await supabase
+            .from('Interviews')
+            .insert([
+                {
+                    uid: user.id,
+                    role: values.role,
+                    difficulty: values.difficulty,
+                    skills: values.skills,
+                    job_description: values.jobDescription,
+                    status: "not-started"
+                },
+            ])
+            .select()
+        console.log(data);
+
+        if (error) {
+            toast.error(error.message)
+        }
+        else {
+            // form.reset()
+            setOpen(false)
+            toast.success("Interview Created Successfully!")
+        }
+        setLoading(false)
     }
 
     return (
         <>
-            <Sheet>
-                <SheetTrigger asChild>
-                    <Button className={"bg-purple-500 text-white hover:text-purple-500"}>
-                        Create Interview
-                        <PlusIcon />
-                    </Button>
-                </SheetTrigger>
+            <Button
+                onClick={() => setOpen(true)}
+            >
+                Create Interview
+                <PlusIcon />
+            </Button>
+            <Sheet open={open} onOpenChange={() => setOpen(false)}>
                 <SheetContent className={"md:!max-w-lg"}>
                     <SheetHeader className={"border-b "}>
                         <SheetTitle>Create New Interview</SheetTitle>
@@ -55,7 +85,7 @@ const CreateInterview = () => {
                                         name="role"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel className={"text-purple-400"}>Interview Role</FormLabel>
+                                                <FormLabel className={"text-purple-500"}>Interview Role</FormLabel>
                                                 <FormControl>
                                                     <Input
                                                         autoFocus={false}
@@ -72,7 +102,7 @@ const CreateInterview = () => {
                                         name="difficulty"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel className={"text-purple-400"}>Difficulty Level</FormLabel>
+                                                <FormLabel className={"text-purple-500"}>Difficulty Level</FormLabel>
                                                 <Select
                                                     onValueChange={field.onChange}
                                                     defaultValue={field.value}
@@ -106,7 +136,7 @@ const CreateInterview = () => {
                                         name="skills"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel className={"text-purple-400"}>Skills</FormLabel>
+                                                <FormLabel className={"text-purple-500"}>Skills</FormLabel>
                                                 <FormControl>
                                                     <MultiSelect
                                                         options={Skills}
@@ -125,7 +155,7 @@ const CreateInterview = () => {
                                         name="jobDescription"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel className={"text-purple-400"}>Job Description</FormLabel>
+                                                <FormLabel className={"text-purple-500"}>Job Description</FormLabel>
                                                 <FormControl>
                                                     <Textarea
                                                         placeholder="Enter Your Job Description"
@@ -147,7 +177,7 @@ const CreateInterview = () => {
                                             !form.formState.isValid ||
                                             loading
                                         }
-                                        className={"bg-purple-500 text-white hover:text-purple-500 w-full"}
+                                        className={"w-full"}
                                     >
                                         {loading ? <> Creating ... <Loading /></> : "Create"}
                                     </Button>
