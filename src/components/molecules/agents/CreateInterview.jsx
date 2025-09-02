@@ -45,16 +45,18 @@ const CreateInterview = () => {
                     role: values.role,
                     difficulty: values.difficulty,
                     skills: values.skills,
-                    jobDescription: values.jobDescription,
-                    status: "no-started"
+                    job_description: values.jobDescription,
+                    status: "not-started"
                 },
             ])
             .select()
+        console.log(data);
+
         if (error) {
             toast.error(error.message)
         }
         else {
-            form.reset()
+            // form.reset()
             setOpen(false)
             toast.success("Interview Created Successfully!")
         }
