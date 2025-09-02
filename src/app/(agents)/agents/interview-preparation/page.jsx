@@ -3,6 +3,7 @@ import CreateInterview from "@/components/molecules/agents/CreateInterview"
 import InterviewList from "@/components/molecules/agents/InterviewList"
 
 const page = () => {
+
     return (
         <>
             <div className="flex-1 px-4 py-6 w-full overflow-y-auto">
