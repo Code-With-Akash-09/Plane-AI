@@ -87,7 +87,7 @@ const SignInForm = () => {
                             !form.formState.isValid ||
                             loading
                         }
-                        className={"w-full text-white bg-purple-500 hover:text-purple-500"}>
+                        className={"w-full"}>
                         {loading ? <Loading /> : "Get Started"}
                     </Button>
                 </form>

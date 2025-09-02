@@ -7,7 +7,7 @@ const AgentsLayout = ({ children }) => {
             <ProtectedRoute>
                 <div className="flex flex-col size-full">
                     <AiNavbar />
-                    <div className="flex flex-1 w-full h-[calc(100vh-56px)]">
+                    <div className="flex flex-col flex-1 w-full h-[calc(100vh-56px)]">
                         {children}
                     </div >
                 </div>

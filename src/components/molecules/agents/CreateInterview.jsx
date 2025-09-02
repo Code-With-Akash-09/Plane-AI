@@ -67,7 +67,6 @@ const CreateInterview = () => {
         <>
             <Button
                 onClick={() => setOpen(true)}
-                className={"bg-purple-500 text-white hover:text-purple-500"}
             >
                 Create Interview
                 <PlusIcon />
@@ -86,7 +85,7 @@ const CreateInterview = () => {
                                         name="role"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel className={"text-purple-400"}>Interview Role</FormLabel>
+                                                <FormLabel className={"text-purple-500"}>Interview Role</FormLabel>
                                                 <FormControl>
                                                     <Input
                                                         autoFocus={false}
@@ -103,7 +102,7 @@ const CreateInterview = () => {
                                         name="difficulty"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel className={"text-purple-400"}>Difficulty Level</FormLabel>
+                                                <FormLabel className={"text-purple-500"}>Difficulty Level</FormLabel>
                                                 <Select
                                                     onValueChange={field.onChange}
                                                     defaultValue={field.value}
@@ -137,7 +136,7 @@ const CreateInterview = () => {
                                         name="skills"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel className={"text-purple-400"}>Skills</FormLabel>
+                                                <FormLabel className={"text-purple-500"}>Skills</FormLabel>
                                                 <FormControl>
                                                     <MultiSelect
                                                         options={Skills}
@@ -156,7 +155,7 @@ const CreateInterview = () => {
                                         name="jobDescription"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel className={"text-purple-400"}>Job Description</FormLabel>
+                                                <FormLabel className={"text-purple-500"}>Job Description</FormLabel>
                                                 <FormControl>
                                                     <Textarea
                                                         placeholder="Enter Your Job Description"
@@ -178,7 +177,7 @@ const CreateInterview = () => {
                                             !form.formState.isValid ||
                                             loading
                                         }
-                                        className={"bg-purple-500 text-white hover:text-purple-500 w-full"}
+                                        className={"w-full"}
                                     >
                                         {loading ? <> Creating ... <Loading /></> : "Create"}
                                     </Button>

@@ -27,7 +27,7 @@ const Navbar = () => {
                                 <div key={i} className="w-fit">
                                     <Link
                                         href={item.href}
-                                        className="flex text-sm text-neutral-800 font-semibold py-1.5 px-3 md:px-4 hover:bg-purple-500 hover:text-white rounded-full transition-all ease-in-out"
+                                        className="flex text-sm text-neutral-800 font-semibold py-1.5 px-3 md:px-4 hover:bg-primary hover:text-white rounded-full transition-all ease-in-out"
                                     >
                                         {item.name}
                                     </Link>

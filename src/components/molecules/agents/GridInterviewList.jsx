@@ -22,17 +22,17 @@ const GridInterviewList = async () => {
                         </>
                     ) : (
                         Interviews?.map((interview, i) => (
-                            <Card key={i} className={"py-4"}>
+                            <Card key={i} className={"py-4 h-fit"}>
                                 <CardHeader className={"px-4"}>
                                     <CardTitle>{interview.role}</CardTitle>
                                 </CardHeader>
                                 <CardContent className={"flex gap-4 px-4 items-end justify-between"}>
                                     <Button
                                         asChild
-                                        className={"w-3/5 bg-purple-500 text-white hover:text-purple-500"}
+                                        className={"w-3/5"}
                                     >
                                         <Link
-                                            href={`/agents/interview-preparation/${interview.interview_id}`}
+                                            href={`/agents/interview-preparation/interview/${interview.interview_id}`}
                                             className="cursor-pointer"
                                         >
                                             Start

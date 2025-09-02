@@ -62,7 +62,7 @@ const Home = () => {
 						<h1 className="flex font-mono flex-col text-3xl lg:text-4xl xl:text-5xl font-bold max-w-xl gap-4 w-full">
 							<span className="w-fit">Autonomous</span>
 							<span className="w-fit space-x-4">
-								<span className="bg-white w-fit text-purple-500 rounded-lg px-4 py-0.5">
+								<span className="bg-white w-fit rounded-lg px-4 py-0.5">
 									<AuroraText>AI Agents</AuroraText>
 								</span>
 								<span className="w-fit">
@@ -92,7 +92,7 @@ const Home = () => {
 						</p>
 						<Button asChild className={"cursor-pointer"}>
 							<Link href={"/agents"}
-								className="w-fit bg-purple-500 text-white hover:text-purple-500"
+								className="w-fit"
 							>
 								Get Started <Rocket />
 							</Link>
