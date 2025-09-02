@@ -46,6 +46,7 @@ const CreateInterview = () => {
                     difficulty: values.difficulty,
                     skills: values.skills,
                     jobDescription: values.jobDescription,
+                    status: "no-started"
                 },
             ])
             .select()
