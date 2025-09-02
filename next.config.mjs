@@ -10,6 +10,15 @@ const nextConfig = {
             },
         ],
     },
+    async redirects() {
+        return [
+            {
+                source: "/agents/interview-preparation/interview",
+                destination: "/agents/interview-preparation",
+                permanent: true,
+            },
+        ]
+    },
 };
 
 export default nextConfig;

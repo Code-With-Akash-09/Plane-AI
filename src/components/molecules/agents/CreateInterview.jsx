@@ -56,7 +56,7 @@ const CreateInterview = () => {
             toast.error(error.message)
         }
         else {
-            // form.reset()
+            form.reset()
             setOpen(false)
             toast.success("Interview Created Successfully!")
         }
