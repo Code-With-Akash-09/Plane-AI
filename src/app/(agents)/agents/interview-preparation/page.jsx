@@ -1,7 +1,6 @@
 import AgentsHeader from "@/components/atoms/agents/AgentsHeader"
+import CreateInterview from "@/components/molecules/agents/CreateInterview"
 import InterviewList from "@/components/molecules/agents/InterviewList"
-import { Button } from "@/components/ui/button"
-import { PlusIcon } from "lucide-react"
 
 const page = () => {
     return (
@@ -18,12 +17,7 @@ const page = () => {
                                     Get ready for your next interview with AI-powered mock interviews, personalized feedback, and tailored practice questions.
                                 </p>
                             </div>
-                            <Button
-                                className={"bg-purple-500 text-white hover:text-purple-500"}
-                            >
-                                Create Interview
-                                <PlusIcon />
-                            </Button>
+                            <CreateInterview />
                         </div>
                     </div>
                     <div className="flex flex-1 flex-col gap-4 md:gap-6 w-full p-4 md:p-6 rounded-3xl border border-neutral-800">
