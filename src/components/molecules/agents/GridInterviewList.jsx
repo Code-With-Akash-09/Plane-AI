@@ -1,20 +1,22 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getUser } from "@/lib/supabase/server";
 import { format } from "date-fns";
 import Link from "next/link";
 
 const GridInterviewList = async () => {
 
     const supabase = await createClient()
+    const user = await getUser()
 
     let { data: Interviews } = await supabase
         .from('Interviews')
         .select('*')
+        .eq("uid", user.id)
 
     return (
         <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full h-fit">
                 {
                     Interviews.length === 0 ? (
                         <>

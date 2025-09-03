@@ -50,7 +50,6 @@ const CreateInterview = () => {
                 },
             ])
             .select()
-        console.log(data);
 
         if (error) {
             toast.error(error.message)
