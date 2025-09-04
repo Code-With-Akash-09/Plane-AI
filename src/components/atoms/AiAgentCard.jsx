@@ -4,7 +4,7 @@ import { GlowCard } from "../magic/GlowCard"
 
 const AiAgentCard = ({ agent }) => {
     return (
-        <GlowCard customSize className="w-full !rounded-2xl">
+        <GlowCard customSize touchAction="auto" className="w-full !rounded-2xl">
             <Link
                 href={agent.url}
                 className="space-y-2 w-full"

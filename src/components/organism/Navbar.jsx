@@ -1,17 +1,23 @@
 "use client"
 
+import { useIsMobile } from "@/hooks/use-mobile"
 import { motion } from "framer-motion"
 import Link from "next/link"
 import Logo from "../atoms/Logo"
 
 const Navbar = () => {
+
+    const isMobile = useIsMobile()
+
+    const MotionOrDiv = isMobile ? "div" : motion.div
+
     return (
         <>
-            <motion.div
+            <MotionOrDiv
                 initial={{ y: -100, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 2, delay: 4, ease: "easeInOut" }}
-                className="flex fixed z-50 top-6 w-full items-center justify-center"
+                className="flex fixed z-50 top-4 md:top-6 w-full items-center justify-center"
             >
                 <div className="w-fit bg-white backdrop-blur-2xl p-2 rounded-full">
                     <div className="w-fit inline-flex space-x-2 items-center">
@@ -36,7 +42,7 @@ const Navbar = () => {
                         }
                     </div>
                 </div>
-            </motion.div>
+            </MotionOrDiv>
         </>
     )
 }

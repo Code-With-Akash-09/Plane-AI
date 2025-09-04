@@ -13,6 +13,7 @@ import { createClient } from "@/lib/supabase/client"
 import { useAuth } from "@/providers/AuthProvider"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { PlusIcon } from "lucide-react"
+import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
@@ -22,6 +23,8 @@ const CreateInterview = () => {
 
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
+    const router = useRouter()
+
     const { user } = useAuth()
     const supabase = createClient()
 
@@ -50,6 +53,7 @@ const CreateInterview = () => {
                 },
             ])
             .select()
+            .single()
 
         if (error) {
             toast.error(error.message)
@@ -57,6 +61,7 @@ const CreateInterview = () => {
         else {
             form.reset()
             setOpen(false)
+            router.push(`/agents/interview-preparation/interview/${data?.interview_id}`)
             toast.success("Interview Created Successfully!")
         }
         setLoading(false)

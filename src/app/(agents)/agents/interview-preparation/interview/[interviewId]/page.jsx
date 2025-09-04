@@ -14,8 +14,8 @@ const InterviewId = async ({ params }) => {
 
     return (
         <>
-            <div className="flex-1 px-4 py-4 w-full overflow-y-auto">
-                <div className="flex w-full max-w-7xl mx-auto h-full md:items-center md:justify-center">
+            <div className="flex-1 px-4 py-4 w-full">
+                <div className="flex w-full max-w-7xl mx-auto h-full items-center justify-center">
                     <InterviewHomeScreen interview={Interview} />
                 </div>
             </div >

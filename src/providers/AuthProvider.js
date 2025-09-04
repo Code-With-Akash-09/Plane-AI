@@ -68,7 +68,6 @@ const AuthProvider = ({ children }) => {
 
     const signOut = async () => {
         let { error } = await supabase.auth.signOut()
-        cookieStore.remove("plane_access")
         return { error }
     }
 
@@ -77,7 +76,6 @@ const AuthProvider = ({ children }) => {
 
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
             (event, session) => {
-                cookieStore.set("plane_access", session.access_token)
                 setUser(session?.user ?? null)
                 setLoading(false)
             }

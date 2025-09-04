@@ -17,12 +17,10 @@ const InterviewScreen = ({ interview }) => {
                     >
                         <div
                             className="flex z-10 w-full h-fit max-w-40 mx-auto aspect-square border border-neutral-800 rounded-full backdrop-blur-sm bg-gradient-to-r from-blue-800/40 via-neutral-900 to-purple-600/30">
-                            <video
-                                muted
-                                loop
-                                className="w-full h-fit relative rounded-full object-contain"
+                            <video autoPlay muted loop playsInline
+                                className="w-full h-full relative rounded-full bg-transparent"
                             >
-                                <source src="/assets/video/AI-Modal-1.webm" type="video/webm" />
+                                <source src="/assets/video/AI-Modal-1.mp4" type="video/mp4" />
                             </video>
                         </div>
                         <Ripple />
@@ -41,7 +39,7 @@ const InterviewScreen = ({ interview }) => {
                                 className={"size-full"}
                             />
                         </div>
-                        <span className="text-base md:text-lg font-bold font-mono">
+                        <span className="hidden md:block text-base md:text-lg font-bold font-mono">
                             {user ? user.user_metadata?.name : "John Doe"}
                         </span>
                     </div>

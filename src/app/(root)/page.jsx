@@ -13,26 +13,28 @@ const Home = () => {
 
 	const isMobile = useIsMobile()
 
+	const MotionOrDiv = isMobile ? "div" : motion.div
+
 	return (
 		<div className="size-full flex pt-12">
 			<div className="flex w-full md:h-full min-h-[600px] max-h-[1000px] mx-auto items-end justify-center overflow-hidden relative">
 				<div className="flex w-full h-full">
-					<motion.div
+					<MotionOrDiv
 						initial={{ y: 50, opacity: 0 }}
 						animate={{ y: 0, opacity: 1 }}
 						transition={{ duration: 2, delay: 1, ease: "easeInOut" }}
 						className="flex h-full items-center justify-center w-full"
 					>
 						<span className="flex size-full translate-y-80 min-w-40 aspect-square max-w-full bg-blue-600/40 rounded-full blur-[300px]"></span>
-					</motion.div>
+					</MotionOrDiv>
 					<div className="flex absolute z-10 bottom-0 inset-x-0 items-end justify-center h-full w-full">
-						<motion.div
+						<MotionOrDiv
 							initial={{ y: 50, opacity: 0 }}
 							animate={{ y: 0, opacity: 1 }}
 							transition={{ duration: 1.5, delay: 0.5, ease: "easeInOut" }}
-							className="flex w-full h-[70%] md:h-[90%] relative justify-center"
+							className="flex w-full h-80 md:h-[90%] relative justify-center"
 						>
-							<motion.div
+							<MotionOrDiv
 								initial={{ x: 0 }}
 								animate={{ x: isMobile ? 0 : 350 }}
 								transition={{ duration: 2.5, delay: 2, ease: "easeInOut" }}
@@ -41,20 +43,20 @@ const Home = () => {
 									src={"/assets/banner-img/hero-img.avif"}
 									alt="Hero Image"
 									fill
-									className="object-contain object-bottom"
+									className="object-contain object-bottom-right md:object-bottom"
 								/>
-							</motion.div>
-						</motion.div>
+							</MotionOrDiv>
+						</MotionOrDiv>
 					</div>
 				</div>
-				<motion.div
+				<MotionOrDiv
 					initial={{ y: 50, opacity: 0 }}
 					animate={{ y: 0, opacity: 1 }}
 					transition={{ duration: 2.5, delay: 2, ease: "easeInOut" }}
 					className="flex w-full h-full absolute top-0 z-20 inset-0 md:items-center ,md:justify-center"
 				>
 
-					<motion.div
+					<MotionOrDiv
 						initial={{ y: 50, opacity: 0 }}
 						animate={{ y: 0, opacity: 1 }}
 						transition={{ duration: 2.5, delay: 3, ease: "easeInOut" }}
@@ -87,7 +89,7 @@ const Home = () => {
 								/>
 							</span>
 						</h1>
-						<p className="text-sm md:text-base lg:text-lg max-w-xl">
+						<p className="text-sm md:text-base lg:text-lg max-w-full md:max-w-xl">
 							Plane AI empowers businesses with next-gen autonomous agents that learn, adapt, and act - in real-time, across systems, at scale.
 						</p>
 						<Button asChild className={"cursor-pointer"}>
@@ -97,8 +99,8 @@ const Home = () => {
 								Get Started <Rocket />
 							</Link>
 						</Button>
-					</motion.div>
-				</motion.div>
+					</MotionOrDiv>
+				</MotionOrDiv>
 			</div>
 		</div>
 	)
