@@ -1,6 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
-import { GlowCard } from "../magic/GlowCard"
+import { GlowCard } from "../magicui/GlowCard"
 
 const AiAgentCard = ({ agent }) => {
     return (

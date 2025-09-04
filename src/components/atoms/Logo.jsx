@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils"
 import Link from "next/link"
-import { SparklesText } from "../magic/SparklesText"
+import { SparklesText } from "../magicui/SparklesText"
 import { AuroraText } from "./AuroraText"
 
 const Logo = ({ className, link = false, sparkles = false, aurora = false, sparklesCount = 6 }) => {
