@@ -19,7 +19,7 @@ const InterviewHomeScreen = ({ interview }) => {
                     <div className="grid grid-cols-1 md:grid-cols-2 flex-col gap-6 w-full h-fit">
                         <div className="flex flex-col w-full gap-6 md:gap-8 lg:gap-10">
                             <div className="flex w-full max-w-40 md:max-w-sm lg:max-w-md mx-auto relative aspect-square border border-neutral-700 rounded-2xl bg-gradient-to-r from-blue-800/40 via-neutral-900 to-purple-600/30">
-                                <video autoPlay muted loop className="w-full h-full relative rounded-2xl">
+                                <video autoPlay muted loop playsInline className="w-full h-full relative rounded-2xl">
                                     <source src="/assets/video/AI-Modal-2.mp4" type="video/mp4" />
                                 </video>
                             </div>
