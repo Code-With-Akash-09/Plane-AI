@@ -34,7 +34,7 @@ const CreateInterview = () => {
             role: "",
             difficulty: "",
             skills: [],
-            jobDescription: "",
+            job_description: "",
         },
     })
 
@@ -48,7 +48,7 @@ const CreateInterview = () => {
                     role: values.role,
                     difficulty: values.difficulty,
                     skills: values.skills,
-                    job_description: values.jobDescription,
+                    job_description: values.job_description,
                     status: "not-started"
                 },
             ])
@@ -156,7 +156,7 @@ const CreateInterview = () => {
                                     />
                                     <FormField
                                         control={form.control}
-                                        name="jobDescription"
+                                        name="job_description"
                                         render={({ field }) => (
                                             <FormItem>
                                                 <FormLabel className={"text-purple-500"}>Job Description</FormLabel>
@@ -205,5 +205,5 @@ const CreateInterviewSchema = z.object({
     role: z.string().min(2, { message: "Role is required" }),
     difficulty: z.string().min(2, { message: "Difficulty is required" }),
     skills: z.array(z.string()).min(2, { message: "At least 2 skill is required" }),
-    jobDescription: z.string().min(10, { message: "Job description is required" }),
+    job_description: z.string().min(10, { message: "Job description is required" }),
 })

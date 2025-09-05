@@ -1,16 +1,63 @@
 "use client"
 
+import { generateInterviewQuestions } from '@/actions/gemini.js'
+import Loading from '@/components/atoms/loading'
 import Logo from '@/components/atoms/Logo'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { QuestionPrompt } from '@/constant/agents/agents'
+import { createClient } from '@/lib/supabase/client'
 import { ArrowRight } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
 import InterviewScreen from './InterviewScreen'
 
 const InterviewHomeScreen = ({ interview }) => {
 
     const [loading, setLoading] = useState(false)
+    const [questions, setQuestions] = useState(null)
+    const [interviewData, setInterviewData] = useState(null)
     const [startInterview, setStartInterview] = useState(false)
+    const supabase = createClient()
+
+    const generateQuestionsList = async () => {
+        setLoading(true)
+
+        const prompt = QuestionPrompt(interview)
+        const body = { prompt: prompt }
+        let { content } = await generateInterviewQuestions(body)
+
+        content = content.replace("```json", "").replace("```", "")
+        setQuestions(JSON.parse(content)?.interviewQuestions)
+        setLoading(false)
+    }
+
+    const updateQuestions = async () => {
+        const { data, error } = await supabase
+            .from('Interviews')
+            .update({
+                question_list: questions,
+                status: "in-progress"
+            })
+            .eq("interview_id", interview.interview_id)
+            .select()
+            .single()
+
+        if (error) {
+            toast.error(error.message)
+        }
+        setInterviewData(data)
+        setStartInterview(true)
+    }
+
+    useEffect(() => {
+        if (questions) {
+            updateQuestions()
+        } else if (interview.status === "in-progress") {
+            setStartInterview(true)
+            setInterviewData(interview)
+        }
+    }, [questions, interview])
 
     return (
         <>
@@ -19,7 +66,7 @@ const InterviewHomeScreen = ({ interview }) => {
                     <div className="grid grid-cols-1 md:grid-cols-2 flex-col gap-6 w-full h-fit">
                         <div className="flex flex-col w-full gap-6 md:gap-8 lg:gap-10">
                             <div className="flex w-full max-w-40 md:max-w-sm lg:max-w-md mx-auto relative aspect-square border border-neutral-700 rounded-2xl bg-gradient-to-r from-blue-800/40 via-neutral-900 to-purple-600/30">
-                                <video autoPlay muted loop playsInline className="w-full h-full relative rounded-2xl">
+                                <video loading={"lazy"} autoPlay muted loop playsInline className="w-full h-full relative rounded-2xl">
                                     <source src="/assets/video/AI-Modal-2.mp4" type="video/mp4" />
                                 </video>
                             </div>
@@ -54,15 +101,18 @@ const InterviewHomeScreen = ({ interview }) => {
                                 </div>
                             </div>
                             <Button
-                                onClick={() => setStartInterview(true)}
+                                disabled={loading}
+                                onClick={generateQuestionsList}
                                 className={"cursor-pointer"}
                             >
-                                Start Interview
-                                <ArrowRight />
+                                {
+                                    loading ? "Generating Questions..." : "Start Interview"
+                                }
+                                {loading ? <Loading /> : <ArrowRight />}
                             </Button>
                         </div>
                     </div>
-                ) : <InterviewScreen />
+                ) : <InterviewScreen interview={interviewData} />
             }
         </>
     )

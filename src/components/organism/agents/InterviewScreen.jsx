@@ -6,7 +6,11 @@ import { MessageCircle, Mic, PhoneCall } from "lucide-react"
 
 const InterviewScreen = ({ interview }) => {
 
+    console.log(interview)
+
     const { user } = useAuth()
+
+
 
     return (
         <>
@@ -17,7 +21,7 @@ const InterviewScreen = ({ interview }) => {
                     >
                         <div
                             className="flex z-10 w-full h-fit max-w-40 mx-auto aspect-square border border-neutral-800 rounded-full backdrop-blur-sm bg-gradient-to-r from-blue-800/40 via-neutral-900 to-purple-600/30">
-                            <video autoPlay muted loop playsInline
+                            <video loading={"lazy"} autoPlay muted loop playsInline
                                 className="w-full h-full relative rounded-full bg-transparent"
                             >
                                 <source src="/assets/video/AI-Modal-1.mp4" type="video/mp4" />

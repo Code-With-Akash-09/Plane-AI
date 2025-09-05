@@ -193,3 +193,28 @@ export const DifficultyLevels = [
         label: "Advanced"
     }
 ]
+
+export const QuestionPrompt = (body) => {
+    const { role, skills, difficulty, job_description } = body
+    return `
+        You are an expert technical interviewer.
+        Based on the following inputs, generate a well-structured list of high-quality interview questions:
+            Job Role: ${role}
+            Difficulty Level: ${difficulty}
+            Key Skills: ${skills.join(", ")}
+            Job Description: ${job_description}
+        Your task:
+            Analyze the job description to identify key responsibilities, required skills, and expected experience.
+            Generate a list of interview questions depends on interview role, difficulty level, and job description.
+            Adjust the number and depth of questions to match the interview duration.
+            Ensure the questions match the tone and structure of a real-life interview.
+        Format your response in JSON format with array list of questions.
+        format: interviewQuestions=[
+            {
+                question:"
+            },
+            {...}
+        ]
+        * The goal is to create a structured, relevant, and time-optimized interview plan for a ${role}.*
+    `
+}
