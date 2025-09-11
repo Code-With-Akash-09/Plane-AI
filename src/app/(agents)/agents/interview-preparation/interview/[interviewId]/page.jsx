@@ -1,22 +1,161 @@
-import InterviewHomeScreen from "@/components/organism/agents/InterviewHomeScreen"
-import { createClient } from "@/lib/supabase/server"
+"use client"
 
-const InterviewId = async ({ params }) => {
+import { geminiAI } from '@/actions/gemini.js'
+import Loading from '@/components/atoms/loading'
+import Logo from '@/components/atoms/Logo'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { questionPrompt } from '@/constant/agents/agents'
+import { createClient } from '@/lib/supabase/client'
+import { ArrowRight } from 'lucide-react'
+import { useParams, useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
 
-    const { interviewId } = await params
-    const supabase = await createClient()
+const InterviewId = () => {
 
-    let { data: Interview } = await supabase
-        .from("Interviews")
-        .select("*")
-        .eq("interview_id", interviewId)
-        .single()
+    const { interviewId } = useParams()
+    const supabase = createClient()
+    const [interview, setInterview] = useState(null)
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState(false)
+    const [questions, setQuestions] = useState(null)
+
+    const router = useRouter()
+
+    const getInterview = async (interviewId) => {
+        setError(false)
+
+        const { data: Interview, error } = await supabase
+            .from("Interviews")
+            .select("*")
+            .eq("interview_id", interviewId)
+            .single()
+
+        setInterview(Interview)
+        setQuestions(Interview?.question_list)
+
+        if (error) {
+            toast.error("Incorrect interview id")
+            setError(true)
+        }
+    }
+
+    const generateQuestionsList = async () => {
+        setLoading(true)
+
+        const prompt = questionPrompt(interview)
+        const body = { prompt: prompt }
+        let { content } = await geminiAI(body)
+
+        content = content.replace("```json", "").replace("```", "")
+        let questions = JSON.parse(content)?.interviewQuestions
+
+        if (questions.length === 0) {
+            toast.error("Failed to generate questions list for this interview")
+            setLoading(false)
+            return
+        }
+        const { data, error } = await supabase
+            .from('Interviews')
+            .update({
+                question_list: questions.map(q => ({
+                    id: q.id,
+                    question: q.question,
+                    userAnswer: "",
+                    correctAnswer: "",
+                    rate: null,
+                    feedback: "",
+                    improvement: "",
+                })),
+                status: "in-progress"
+            })
+            .eq("interview_id", interview?.interview_id)
+            .select()
+            .single()
+
+        if (error) {
+            toast.error(error.message)
+            setLoading(false)
+        }
+
+        setQuestions(data);
+        setLoading(false)
+    }
+
+    useEffect(() => {
+        if (interviewId) getInterview(interviewId)
+    }, [interviewId])
+
+    useEffect(() => {
+        if (questions?.length > 0 || questions !== null) {
+            router.push(`/agents/interview-preparation/interview/${interviewId}/start`)
+        }
+    }, [questions])
 
     return (
         <>
             <div className="flex-1 px-4 py-4 w-full">
                 <div className="flex w-full max-w-7xl mx-auto h-full items-center justify-center">
-                    <InterviewHomeScreen interview={Interview} />
+                    <div className="grid grid-cols-1 md:grid-cols-2 flex-col gap-6 w-full h-fit">
+                        <div className="flex flex-col w-full gap-6 md:gap-8 lg:gap-10">
+                            <div className="flex w-full max-w-40 md:max-w-sm lg:max-w-md mx-auto relative aspect-square border border-neutral-700 rounded-2xl bg-gradient-to-r from-blue-800/40 via-neutral-900 to-purple-600/30">
+                                <video loading={"lazy"} autoPlay muted loop playsInline className="w-full h-full relative rounded-2xl">
+                                    <source src="/assets/video/AI-Modal-2.mp4" type="video/mp4" />
+                                </video>
+                            </div>
+                        </div>
+                        <div className="flex flex-col items-center justify-center w-full gap-6 md:gap-8 lg:gap-10">
+                            <Logo
+                                sparkles
+                                aurora
+                                className={"md:text-4xl"}
+                            />
+                            {
+                                error ? (
+                                    <span className='text-lg md:text-xl lg:text-2xl font-semibold'>Interview not found</span>
+                                ) : (
+                                    <>
+                                        <div className="flex flex-col gap-4 items-center justify-center w-fit">
+                                            <h1 className="font-mono text-2xl md:text-3xl lg:text-4xl text-center font-semibold">
+                                                {interview?.role}
+                                            </h1>
+                                            <span className="text-sm">
+                                                Difficulty Level : <Badge>{interview?.difficulty}</Badge>
+                                            </span>
+                                            <div className="flex gap-4 items-center w-fit">
+                                                <span className="text-sm">Skills:</span>
+                                                <ul className="flex flex-wrap w-fit gap-2">
+                                                    {
+                                                        interview?.skills.map((skill, i) => (
+                                                            <li
+                                                                key={i}
+                                                                className="px-4 py-1 rounded-2xl bg-white/20 backdrop-blur-sm text-white text-xs border border-primary"
+                                                            >
+                                                                {skill}
+                                                            </li>
+                                                        ))
+                                                    }
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <Button
+                                            disabled={loading}
+                                            onClick={generateQuestionsList}
+                                            className={"cursor-pointer"}
+                                        >
+                                            {
+                                                loading ? "Generating Questions..." : "Start Interview"
+                                            }
+                                            {
+                                                loading ? <Loading className='text-white' /> : <ArrowRight />
+                                            }
+                                        </Button>
+                                    </>
+                                )
+                            }
+                        </div>
+                    </div>
                 </div>
             </div >
         </>

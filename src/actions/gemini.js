@@ -2,7 +2,7 @@
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
 
-export const generateInterviewQuestions = async (body) => {
+export const geminiAI = async (body) => {
     let resp = await fetch(`${baseUrl}/api/gemini`, {
         method: "POST",
         headers: {

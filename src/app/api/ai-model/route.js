@@ -1,10 +1,10 @@
-import { QuestionPrompt } from "@/constant/agents/agents";
+import { questionPrompt } from "@/constant/agents/agents";
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
 
 export async function POST(request) {
     const body = await request.json();
-    const context = QuestionPrompt(body)
+    const context = questionPrompt(body)
 
     try {
         const openai = new OpenAI({

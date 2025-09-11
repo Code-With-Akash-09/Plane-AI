@@ -1,3 +1,4 @@
+
 export const Skills = [
     {
         value: "Communication",
@@ -194,7 +195,7 @@ export const DifficultyLevels = [
     }
 ]
 
-export const QuestionPrompt = (body) => {
+export const questionPrompt = (body) => {
     const { role, skills, difficulty, job_description } = body
     return `
         You are an expert technical interviewer.
@@ -211,10 +212,39 @@ export const QuestionPrompt = (body) => {
         Format your response in JSON format with array list of questions.
         format: interviewQuestions=[
             {
-                question:"
+                id:,
+                question:'',
             },
             {...}
         ]
         * The goal is to create a structured, relevant, and time-optimized interview plan for a ${role}.*
+    `
+}
+
+export const greetingMessage = (user, interview) => {
+    // return `
+    // Hello ${user?.user_metadata?.name} !Welcome to your interview for the role of ${interview?.role}. I'm here to help you prepare for your interview. Let's get started!
+    // `
+    return `
+    Hello ${user?.user_metadata?.name}`
+}
+
+export const answerFeedbackPrompt = (body) => {
+    const { question, answer } = body
+    return `
+        You are an interview evaluator.
+        Question: ${question}, Answer: ${answer}
+        Evaluate the answer strictly based on correctness, clarity, and relevance.
+        Give a rating from 1 to 5 (1 = worst, 5 = best).
+        Provide the correct answer, and keep feedback & improvement suggestions concise (4–5 lines only).
+
+        Respond ONLY in JSON with the format:
+        feedback = {
+            userAnswer: "",
+            correctAnswer: "",
+            rate: ,
+            feedback: "",
+            improvement: ""
+        }
     `
 }

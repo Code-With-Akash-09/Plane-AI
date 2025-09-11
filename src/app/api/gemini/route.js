@@ -4,8 +4,13 @@ import { NextResponse } from "next/server";
 export async function POST(request) {
     try {
         const { prompt } = await request.json();
+
         const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-        const result = await model.generateContent(prompt);
+        const result = await model.generateContent({
+            contents: [
+                { role: "user", parts: [{ text: prompt }] }
+            ]
+        });
 
         return NextResponse.json(
             { content: result.response.text() },
@@ -14,7 +19,7 @@ export async function POST(request) {
 
     } catch (error) {
         return NextResponse.json(
-            { message: error.message },
+            { error: error.message },
             { status: error.code }
         );
     }
