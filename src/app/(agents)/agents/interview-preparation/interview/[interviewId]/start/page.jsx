@@ -234,6 +234,12 @@ const StartInterview = () => {
     }, [interviewId]);
 
     useEffect(() => {
+        if (interviewDetails?.question_list === null) {
+            router.push(`/agents/interview-preparation/interview/${interviewId}`)
+        }
+    }, [interviewDetails]);
+
+    useEffect(() => {
         if (user) greeting();
     }, [user]);
 
@@ -360,7 +366,7 @@ const StartInterview = () => {
                                         <AlertDialogHeader>
                                             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                                             <AlertDialogDescription>
-                                                This action cannot be save your previously given questions answers. Are you sure you want to continue. you still have {interviewDetails?.question_list.length - conversation?.length} questions to answer.?
+                                                This action cannot be save your previously given questions answers. Are you sure you want to continue. you still have {interviewDetails?.question_list?.length - conversation?.length} questions to answer.?
                                             </AlertDialogDescription>
                                         </AlertDialogHeader>
                                         <AlertDialogFooter>
