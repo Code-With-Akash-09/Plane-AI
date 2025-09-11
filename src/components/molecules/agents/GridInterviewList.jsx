@@ -11,7 +11,7 @@ const GridInterviewList = async () => {
 
     let { data: Interviews } = await supabase
         .from('Interviews')
-        .select('*')
+        .select("interview_id, role, status, created_at")
         .eq("uid", user.id,)
         .in("status", ["in-progress", "not-started"]);
 

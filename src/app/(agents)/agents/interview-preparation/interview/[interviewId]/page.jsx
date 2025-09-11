@@ -19,7 +19,7 @@ const InterviewId = () => {
     const [interview, setInterview] = useState(null)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(false)
-    const [questions, setQuestions] = useState([])
+    const [questions, setQuestions] = useState(null)
 
     const router = useRouter()
 
@@ -28,7 +28,7 @@ const InterviewId = () => {
 
         const { data: Interview, error } = await supabase
             .from("Interviews")
-            .select("*")
+            .select("question_list, role, skills, difficulty")
             .eq("interview_id", interviewId)
             .single()
 
@@ -38,7 +38,7 @@ const InterviewId = () => {
         if (error) {
             toast.error("Incorrect interview id")
             setError(true)
-            setQuestions([])
+            setQuestions(null)
         }
     }
 
@@ -71,17 +71,17 @@ const InterviewId = () => {
                 })),
                 status: "in-progress"
             })
-            .eq("interview_id", interview?.interview_id)
-            .select()
+            .eq("interview_id", interviewId)
+            .select("question_list")
             .single()
 
         if (error) {
             toast.error(error.message)
             setLoading(false)
-            setQuestions([])
+            setQuestions(null)
         }
 
-        setQuestions(data);
+        setQuestions(data?.question_list);
         setLoading(false)
     }
 
@@ -93,7 +93,7 @@ const InterviewId = () => {
         if (questions?.length > 0) {
             router.push(`/agents/interview-preparation/interview/${interviewId}/start`)
         }
-    }, [questions, interviewId])
+    }, [questions])
 
     return (
         <>

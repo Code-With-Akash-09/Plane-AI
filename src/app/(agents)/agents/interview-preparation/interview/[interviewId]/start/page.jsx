@@ -81,13 +81,18 @@ const StartInterview = () => {
     }
 
     const getInterviewDetails = async (interviewId) => {
-        const { data: Interview } = await supabase
+        const { data: Interview, error } = await supabase
             .from("Interviews")
             .select("*")
             .eq("interview_id", interviewId)
             .single()
 
         setInterviewDetails(Interview)
+
+        if (error) {
+            setInterviewDetails(null)
+            router.replace(`/agents/interview-preparation/interview/${interviewId}`)
+        }
     }
 
     const moveToNextQuestion = () => {
@@ -207,6 +212,31 @@ const StartInterview = () => {
         }
     }
 
+    const handleEndCall = async () => {
+        const { error } = await supabase
+            .from("Interviews")
+            .update({
+                question_list: null,
+                status: "not-started"
+            })
+            .eq("interview_id", interviewId)
+            .select()
+            .single()
+
+        if (!error) {
+            toast.success("Interview ended successfully")
+            router.push(`/agents/interview-preparation/`)
+        }
+    }
+
+    useEffect(() => {
+        if (interviewId) getInterviewDetails(interviewId);
+    }, [interviewId]);
+
+    useEffect(() => {
+        if (user) greeting();
+    }, [user]);
+
     useEffect(() => {
         if (results && results.length > 0 && isRecording) {
             const currentSessionResults = results.filter(result =>
@@ -230,20 +260,6 @@ const StartInterview = () => {
             currentRecordingRef.current = interimResult.trim();
         }
     }, [interimResult, isRecording])
-
-    useEffect(() => {
-        if (interviewId) getInterviewDetails(interviewId);
-    }, [interviewId]);
-
-    useEffect(() => {
-        if (user) greeting();
-    }, [user]);
-
-    useEffect(() => {
-        if (interviewDetails === null) {
-            router.replace(`/agents/interview-preparation/interview/${interviewId}`)
-        }
-    }, [interviewDetails, interviewId]);
 
     useEffect(() => {
         if (isInterviewComplete && conversation.length > 0) {
@@ -344,12 +360,14 @@ const StartInterview = () => {
                                         <AlertDialogHeader>
                                             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                                             <AlertDialogDescription>
-                                                This action cannot be undone. Your interview will be end.
+                                                This action cannot be save your previously given questions answers. Are you sure you want to continue. you still have {interviewDetails?.question_list.length - conversation?.length} questions to answer.?
                                             </AlertDialogDescription>
                                         </AlertDialogHeader>
                                         <AlertDialogFooter>
                                             <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                            <AlertDialogAction>
+                                            <AlertDialogAction
+                                                onClick={handleEndCall}
+                                            >
                                                 Continue
                                             </AlertDialogAction>
                                         </AlertDialogFooter>
