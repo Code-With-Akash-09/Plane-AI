@@ -11,8 +11,9 @@ const GridInterviewList = async () => {
 
     let { data: Interviews } = await supabase
         .from('Interviews')
-        .select('*')
-        .eq("uid", user.id)
+        .select("interview_id, role, status, created_at")
+        .eq("uid", user.id,)
+        .in("status", ["in-progress", "not-started"]);
 
     return (
         <>
@@ -41,11 +42,15 @@ const GridInterviewList = async () => {
                                         </Link>
                                     </Button>
                                     <div className="flex flex-col gap-1">
-                                        <span className="text-xs text-neutral-400">
-                                            {
-                                                interview.status === "not-started" ? "Not Started" : "In Progress"
-                                            }
-                                        </span>
+                                        {Status.filter(s => s.value === interview.status).map((status, i) => (
+                                            <span
+                                                key={i}
+                                                className={`rounded-full px-2 py-0.5 text-[10px] ${status.className}`}
+                                            >
+                                                {status.label}
+                                            </span>
+                                        ))}
+
                                         <span className="text-xs text-neutral-400">
                                             {format(interview.created_at, "PP")}
                                         </span>
@@ -61,3 +66,25 @@ const GridInterviewList = async () => {
 }
 
 export default GridInterviewList
+
+
+const Status = [
+    {
+        id: 1,
+        value: "not-started",
+        label: "Not Started",
+        className: "bg-neutral-500 text-white"
+    },
+    {
+        id: 2,
+        value: "in-progress",
+        label: "In Progress",
+        className: "bg-blue-400 text-white"
+    },
+    {
+        id: 3,
+        value: "completed",
+        label: "Completed",
+        className: "bg-green-500 text-white"
+    }
+]

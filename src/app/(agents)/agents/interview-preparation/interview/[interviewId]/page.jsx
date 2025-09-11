@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { questionPrompt } from '@/constant/agents/agents'
 import { createClient } from '@/lib/supabase/client'
-import { ArrowRight } from 'lucide-react'
+import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
@@ -28,7 +28,7 @@ const InterviewId = () => {
 
         const { data: Interview, error } = await supabase
             .from("Interviews")
-            .select("*")
+            .select("question_list, role, skills, difficulty")
             .eq("interview_id", interviewId)
             .single()
 
@@ -38,6 +38,7 @@ const InterviewId = () => {
         if (error) {
             toast.error("Incorrect interview id")
             setError(true)
+            setQuestions(null)
         }
     }
 
@@ -70,16 +71,17 @@ const InterviewId = () => {
                 })),
                 status: "in-progress"
             })
-            .eq("interview_id", interview?.interview_id)
-            .select()
+            .eq("interview_id", interviewId)
+            .select("question_list")
             .single()
 
         if (error) {
             toast.error(error.message)
             setLoading(false)
+            setQuestions(null)
         }
 
-        setQuestions(data);
+        setQuestions(data?.question_list);
         setLoading(false)
     }
 
@@ -88,7 +90,7 @@ const InterviewId = () => {
     }, [interviewId])
 
     useEffect(() => {
-        if (questions?.length > 0 || questions !== null) {
+        if (questions?.length > 0) {
             router.push(`/agents/interview-preparation/interview/${interviewId}/start`)
         }
     }, [questions])
@@ -113,7 +115,16 @@ const InterviewId = () => {
                             />
                             {
                                 error ? (
-                                    <span className='text-lg md:text-xl lg:text-2xl font-semibold'>Interview not found</span>
+                                    <>
+                                        <span className='text-lg md:text-xl lg:text-2xl font-semibold'>Interview not found</span>
+                                        <Button
+                                            onClick={() => router.replace(`/agents/interview-preparation/list`)}
+                                            className={"cursor-pointer"}
+                                        >
+                                            Back to Interview List
+                                            <ArrowLeft />
+                                        </Button>
+                                    </>
                                 ) : (
                                     <>
                                         <div className="flex flex-col gap-4 items-center justify-center w-fit">
