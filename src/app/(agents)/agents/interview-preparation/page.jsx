@@ -20,7 +20,7 @@ const page = () => {
                                     Get ready for your next interview with AI-powered mock interviews, personalized feedback, and tailored practice questions.
                                 </p>
                             </div>
-                            <div className="flex  gap-2 md:gap-4 w-full md:w-fit">
+                            <div className="flex flex-col md:flex-row gap-2 md:gap-4 w-full md:w-fit">
                                 <CreateInterview />
                                 <Button
                                     asChild
@@ -39,7 +39,7 @@ const page = () => {
                     </div>
                     <div className="flex flex-1 flex-col gap-4 md:gap-6 w-full p-4 md:p-6 rounded-3xl border border-neutral-800">
                         <AgentsHeader
-                            title={"Previous Interviews"}
+                            title={"Completed Interviews"}
                             description={"Review and analyze your past interview sessions."}
                         />
                         <div className="flex flex-grow w-full gap-4">

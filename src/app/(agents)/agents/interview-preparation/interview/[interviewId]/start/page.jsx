@@ -151,8 +151,6 @@ const StartInterview = () => {
 
     const updateAnswerToDB = async () => {
         try {
-            console.log(conversation);
-
             if (conversation.length === 0) {
                 toast.warning("No answer to save")
                 return false
@@ -239,22 +237,19 @@ const StartInterview = () => {
 
     useEffect(() => {
         if (user) greeting();
-    }, [user, interviewDetails]);
+    }, [user]);
 
     useEffect(() => {
-        if (interviewDetails?.question_list === null) {
-            router.push(`/agents/interview-preparation/interview/${interviewId}`)
+        if (interviewDetails === null) {
+            router.replace(`/agents/interview-preparation/interview/${interviewId}`)
         }
-    }, [interviewDetails]);
+    }, [interviewDetails, interviewId]);
 
     useEffect(() => {
         if (isInterviewComplete && conversation.length > 0) {
             handleEndInterview();
         }
     }, [isInterviewComplete, conversation]);
-
-    console.log(conversation);
-
 
     return (
         <>
@@ -272,9 +267,11 @@ const StartInterview = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 w-full flex-grow relative">
                             <div
                                 className="flex flex-col w-full gap-10 h-full items-center justify-center border rounded-2xl relative">
-                                <div className={`flex z-10 w-full h-fit max-w-40 mx-auto aspect-square border border-neutral-800
+                                <div
+                                    className={`flex z-10 w-full h-fit max-w-40 mx-auto aspect-square border border-neutral-800
                         rounded-full backdrop-blur-sm bg-gradient-to-r from-blue-800/40 via-neutral-900 to-purple-600/30
-                        ${(isRecording || analyze) && "opacity-40"}`}>
+                        ${(isRecording || analyze) && "opacity-40"}`}
+                                >
                                     <video muted playsInline className="w-full h-full relative rounded-full bg-transparent">
                                         <source src="/assets/video/AI-Modal-1.mp4" type="video/mp4" />
                                     </video>
@@ -286,18 +283,14 @@ const StartInterview = () => {
                                 className="flex flex-col w-full gap-6 h-full items-center justify-center border rounded-2xl relative bg-white/5">
                                 <div className={`flex z-10 w-full h-fit max-w-40 mx-auto aspect-square border border-neutral-800
                         rounded-full ${(aiSpecking || analyze) && "opacity-40"}`}>
-                                    <UserAvatar alt={user ? user.user_metadata?.name : "John Doe"} unoptimized={false} priority
-                                        rounded="rounded-full" className={"size-full"} />
+                                    <UserAvatar
+                                        alt={user.user_metadata?.name}
+                                        unoptimized={false}
+                                        priority
+                                        rounded="rounded-full"
+                                        className={"size-full"}
+                                    />
                                 </div>
-                                {/* {process.env.NODE_ENV === 'development' && (
-                            <div className="text-xs text-gray-400 text-center max-w-xs">
-                                <p>Recording: {isRecording.toString()}</p>
-                                <p>Question Index: {index}</p>
-                                <p>Current Q ID: {questionList[index]?.id}</p>
-                                <p>Already Answered: {questionList[index]?.userAnswer ? 'Yes' : 'No'}</p>
-                                <p>Current Answer: {userAnswer.slice(0, 30)}{userAnswer.length > 30 ? '...' : ''}</p>
-                            </div>
-                        )} */}
                                 {isRecording &&
                                     <Ripple bgColor="bg-primary/30" />}
                             </div>
@@ -312,7 +305,11 @@ const StartInterview = () => {
                         <div className="flex w-full h-fit flex-grow-0">
                             <div
                                 className="flex w-fit max-w-2xl backdrop-blur-sm bg-white/10 mx-auto border border-neutral-800 rounded-full items-center py-2.5 px-4 gap-3 justify-center">
-                                <Button variant={"outline"} size={"icon"} className={"rounded-full"}>
+                                <Button
+                                    variant={"outline"}
+                                    size={"icon"}
+                                    className={"rounded-full"}
+                                >
                                     <MessageCircle />
                                 </Button>
                                 <Button
@@ -336,7 +333,10 @@ const StartInterview = () => {
                                 </Button>
                                 <AlertDialog>
                                     <AlertDialogTrigger asChild>
-                                        <Button variant={"destructive"} className={"rounded-full"}>
+                                        <Button
+                                            variant={"destructive"}
+                                            className={"rounded-full"}
+                                        >
                                             <PhoneCall />
                                         </Button>
                                     </AlertDialogTrigger>
