@@ -4,12 +4,15 @@ import { geminiAI } from "@/actions/gemini";
 import Loading from "@/components/atoms/loading";
 import UserAvatar from "@/components/atoms/userAvatar";
 import { Ripple } from "@/components/magicui/ripple";
+import ChatView from "@/components/molecules/agents/ChatView";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { answerFeedbackPrompt, greetingMessage } from "@/constant/agents/agents";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/providers/AuthProvider";
 import { InfoIcon, MessageCircle, Mic, MicOff, PhoneCall } from "lucide-react";
+import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import useSpeechToText from "react-hook-speech-to-text";
@@ -19,6 +22,7 @@ const StartInterview = () => {
 
     const supabase = createClient()
     const { user } = useAuth()
+    const isMobile = useIsMobile()
     const { interviewId } = useParams()
     const [interviewDetails, setInterviewDetails] = useState(null)
     const [aiSpecking, setAiSpeaking] = useState(false)
@@ -29,6 +33,7 @@ const StartInterview = () => {
     const [isInterviewComplete, setIsInterviewComplete] = useState(false)
     const currentRecordingRef = useRef("")
     const recordingStartTimeRef = useRef(null)
+    const [chatEnabled, setChatEnabled] = useState(false)
     const router = useRouter()
 
     const {
@@ -229,6 +234,10 @@ const StartInterview = () => {
         }
     }
 
+    const toggleChatView = () => {
+        setChatEnabled(prev => !prev)
+    }
+
     useEffect(() => {
         if (interviewId) getInterviewDetails(interviewId);
     }, [interviewId]);
@@ -241,7 +250,7 @@ const StartInterview = () => {
 
     useEffect(() => {
         if (user) greeting();
-    }, [user]);
+    }, [user, interviewDetails]);
 
     useEffect(() => {
         if (results && results.length > 0 && isRecording) {
@@ -286,51 +295,80 @@ const StartInterview = () => {
                                 </span>
                             </div>
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 w-full flex-grow relative">
+                        <div className={`flex relative flex-col ${chatEnabled ? "md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" : " flex-col"} w-full flex-grow gap-4 md:gap-6`}>
                             <div
-                                className="flex flex-col w-full gap-10 h-full items-center justify-center border rounded-2xl relative">
+                                className={`grid ${chatEnabled ? "grid-cols-2 md:grid-cols-1" : "grid-cols-1 md:grid-cols-2 h-full"} gap-4 md:gap-6 w-full md:flex-grow relative`}>
                                 <div
-                                    className={`flex z-10 w-full h-fit max-w-40 mx-auto aspect-square border border-neutral-800
-                        rounded-full backdrop-blur-sm bg-gradient-to-r from-blue-800/40 via-neutral-900 to-purple-600/30
+                                    className={`flex flex-col w-full gap-10 h-full items-center justify-center border rounded-2xl relative overflow-hidden ${chatEnabled && "aspect-square md:aspect-auto"}`}>
+                                    <div
+                                        className={`flex z-10 w-full h-fit max-w-20 md:max-w-40 mx-auto aspect-square border border-neutral-800
+                        rounded-full backdrop-blur-sm bg-white
                         ${(isRecording || analyze) && "opacity-40"}`}
-                                >
-                                    <video muted playsInline className="w-full h-full relative rounded-full bg-transparent">
-                                        <source src="/assets/video/AI-Modal-1.mp4" type="video/mp4" />
-                                    </video>
+                                    >
+                                        {/* <video muted playsInline className="w-full h-full relative rounded-full bg-transparent">
+                                            <source src="/assets/banner-img/hero-img.avif" type="video/mp4" />
+                                        </video> */}
+                                        <Image
+                                            src={"/assets/banner-img/hero-img.avif"}
+                                            alt="Hero Image"
+                                            fill
+                                            className="object-contain object-bottom-right md:object-bottom rounded-full"
+                                        />
+                                    </div>
+                                    {aiSpecking &&
+                                        <Ripple
+                                            mainCircleSize={isMobile ? 80 : 210} bgColor="bg-blue-500/70"
+                                        />
+                                    }
                                 </div>
-                                {aiSpecking &&
-                                    <Ripple bgColor="bg-blue-500/70" />}
-                            </div>
-                            <div
-                                className="flex flex-col w-full gap-6 h-full items-center justify-center border rounded-2xl relative bg-white/5">
-                                <div className={`flex z-10 w-full h-fit max-w-40 mx-auto aspect-square border border-neutral-800
-                        rounded-full ${(aiSpecking || analyze) && "opacity-40"}`}>
-                                    <UserAvatar
-                                        alt={user.user_metadata?.name}
-                                        unoptimized={false}
-                                        priority
-                                        rounded="rounded-full"
-                                        className={"size-full"}
-                                    />
-                                </div>
-                                {isRecording &&
-                                    <Ripple bgColor="bg-primary/30" />}
-                            </div>
-                            {analyze && (
                                 <div
-                                    className="flex w-fit absolute inset-x-0 mx-auto top-4 z-10 h-fit border border-neutral-800 px-4 py-2.5 gap-4 bg-white/20 backdrop-blur-sm rounded-md">
+                                    className={`flex flex-col w-full gap-6 h-full items-center justify-center border rounded-2xl relative bg-white/5 overflow-hidden ${chatEnabled && "aspect-square md:aspect-auto"}`}>
+                                    <div className={`flex z-10 w-full h-fit max-w-20 md:max-w-40 mx-auto aspect-square border border-neutral-800
+                        rounded-full ${(aiSpecking || analyze) && "opacity-40"}`}>
+                                        <UserAvatar
+                                            alt={user.user_metadata?.name}
+                                            unoptimized={false}
+                                            priority
+                                            rounded="rounded-full"
+                                            className={"size-full"}
+                                        />
+                                    </div>
+                                    {isRecording &&
+                                        <Ripple
+                                            mainCircleSize={isMobile ? 80 : 210} bgColor="bg-primary/30"
+                                        />
+                                    }
+                                </div>
+                            </div>
+                            {!chatEnabled && analyze && (
+                                <div
+                                    className="flex flex-col md:flex-row items-center w-fit absolute inset-0 my-auto mx-auto top-4 z-10 h-fit border border-neutral-800 px-4 py-2.5 gap-4 bg-white/20 backdrop-blur-sm rounded-md max-w-60 text-center md:max-w-fit">
                                     Wait for moment ai is analyzing your answer
                                     <Loading className="text-primary" />
                                 </div>
                             )}
+                            {chatEnabled &&
+                                <ChatView
+                                    name={user?.user_metadata?.name}
+                                    role={interviewDetails?.role}
+                                    index={index}
+                                    question={question}
+                                    answer={userAnswer}
+                                    conversation={conversation}
+                                    aiSpecking={aiSpecking}
+                                    isRecording={isRecording}
+                                    analyze={analyze}
+                                />
+                            }
                         </div>
                         <div className="flex w-full h-fit flex-grow-0">
                             <div
                                 className="flex w-fit max-w-2xl backdrop-blur-sm bg-white/10 mx-auto border border-neutral-800 rounded-full items-center py-2.5 px-4 gap-3 justify-center">
                                 <Button
-                                    variant={"outline"}
+                                    variant={chatEnabled ? "outline" : "default"}
                                     size={"icon"}
-                                    className={"rounded-full"}
+                                    className={"rounded-full cursor-pointer"}
+                                    onClick={toggleChatView}
                                 >
                                     <MessageCircle />
                                 </Button>
@@ -366,7 +404,7 @@ const StartInterview = () => {
                                         <AlertDialogHeader>
                                             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                                             <AlertDialogDescription>
-                                                This action cannot be save your previously given questions answers. Are you sure you want to continue. you still have {interviewDetails?.question_list?.length - conversation?.length} questions to answer.?
+                                                This action cannot be save your previously given questions answers. Are you sure you want to continue. you still have {interviewDetails?.question_list?.length - conversation?.length} questions to answer. if you are ok then click continue.
                                             </AlertDialogDescription>
                                         </AlertDialogHeader>
                                         <AlertDialogFooter>
@@ -383,7 +421,7 @@ const StartInterview = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div >
         </>
     )
 }
