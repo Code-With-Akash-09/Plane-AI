@@ -204,29 +204,29 @@ export const questionPrompt = (body) => {
             Difficulty Level: ${difficulty}
             Key Skills: ${skills.join(", ")}
             Job Description: ${job_description}
+
         Your task:
-            Analyze the job description to identify key responsibilities, required skills, and expected experience.
-            Generate a list of interview questions depends on interview role, difficulty level, and job description.
-            Adjust the number and depth of questions to match the interview duration.
-            Ensure the questions match the tone and structure of a real-life interview.
+            - Analyze the job description to identify key responsibilities, required skills, and expected experience.
+            - Generate exactly 5 interview questions tailored to the role, difficulty level, and job description. 
+            - Ensure the questions match the tone and structure of a real-life interview.
+
         Format your response in JSON format with array list of questions.
         format: interviewQuestions=[
             {
-                id:,
+                id: 0,
                 question:'',
             },
             {...}
         ]
+            
         * The goal is to create a structured, relevant, and time-optimized interview plan for a ${role}.*
     `
 }
 
-export const greetingMessage = (user, interview) => {
-    // return `
-    // Hello ${user?.user_metadata?.name} !Welcome to your interview for the role of ${interview?.role}. I'm here to help you prepare for your interview. Let's get started!
-    // `
+export const greetingMessage = (user, interviewDetails) => {
     return `
-    Hello ${user?.user_metadata?.name}`
+        Hello ${user?.user_metadata?.name} !Welcome to your interview for the role of ${interviewDetails?.role}. I'm here to help you prepare for your interview. Let's get started!
+    `
 }
 
 export const answerFeedbackPrompt = (body) => {
