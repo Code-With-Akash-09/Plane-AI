@@ -2,8 +2,8 @@
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
 
-export const geminiAI = async (body) => {
-    let resp = await fetch(`${baseUrl}/api/gemini`, {
+export const geminiInterviewPreparationAI = async (body) => {
+    let resp = await fetch(`${baseUrl}/api/gemini/interview-preparation`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
