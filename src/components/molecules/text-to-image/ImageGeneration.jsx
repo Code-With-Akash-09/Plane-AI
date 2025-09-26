@@ -9,6 +9,7 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from "@/component
 import { Skeleton } from "@/components/ui/skeleton"
 import { Textarea } from "@/components/ui/textarea"
 import { createClient } from "@/lib/supabase/client"
+import { useAuth } from "@/providers/AuthProvider"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Download, Image, Stars } from "lucide-react"
 import { useState } from "react"
@@ -19,6 +20,7 @@ import z from "zod"
 const ImageGeneration = () => {
 
     const supabase = createClient()
+    const { user } = useAuth()
     const [loading, setLoading] = useState(false)
     const [image, setImage] = useState("")
 
@@ -33,26 +35,28 @@ const ImageGeneration = () => {
     const onSubmit = async (values) => {
         setLoading(true)
         const body = { prompt: values.prompt }
-        const { imageUrl, message: error, status } = await openAITextToImage(body)
+        const { imageUrl } = await openAITextToImage(body)
 
-        if (!imageUrl) {
-            toast.error("Failed to generate image")
-        }
-        const { error: supabaseError } = await supabase
-            .from('AIImages')
-            .insert([
-                {
-                    prompt: values.prompt,
-                    image_url: imageUrl
-                },
-            ])
-            .select()
+        if (imageUrl) {
+            const { error: supabaseError } = await supabase
+                .from('AIImages')
+                .insert([
+                    {
+                        uid: user.id,
+                        prompt: values.prompt,
+                        image_url: imageUrl
+                    },
+                ])
+                .select()
 
-        if (supabaseError) {
-            toast.error("Failed to save image to supabase")
+            if (supabaseError) {
+                toast.error("Failed to save image to supabase")
+            }
+            setImage(imageUrl)
+            setLoading(false)
         }
-        setImage(imageUrl)
         setLoading(false)
+        toast.error("Failed to generate image")
     }
 
     const downloadImage = async () => {
@@ -88,7 +92,7 @@ const ImageGeneration = () => {
                                         <FormControl>
                                             <Textarea
                                                 type="text"
-                                                placeholder="Enter Your Prompt Here..."
+                                                placeholder="Example: A magical forest with glowing mushrooms and fireflies....."
                                                 className={"min-h-32 max-h-80 w-full text-neutral-200"}
                                                 {...field}
                                             />
