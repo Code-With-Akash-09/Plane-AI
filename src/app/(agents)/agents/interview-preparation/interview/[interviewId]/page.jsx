@@ -1,6 +1,6 @@
 "use client"
 
-import { geminiInterviewPreparationAI } from '@/actions/gemini.js'
+import { geminiInterviewPreparationAI } from '@/actions/ai.js'
 import Loading from '@/components/atoms/loading'
 import Logo from '@/components/atoms/Logo'
 import { Badge } from '@/components/ui/badge'

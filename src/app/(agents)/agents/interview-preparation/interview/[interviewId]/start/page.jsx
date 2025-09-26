@@ -1,6 +1,6 @@
 "use client"
 
-import { geminiInterviewPreparationAI } from "@/actions/gemini";
+import { geminiInterviewPreparationAI } from "@/actions/ai";
 import Loading from "@/components/atoms/loading";
 import UserAvatar from "@/components/atoms/userAvatar";
 import { Ripple } from "@/components/magicui/ripple";
