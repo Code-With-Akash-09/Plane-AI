@@ -1,6 +1,6 @@
 "use client"
 
-import { geminiAI } from '@/actions/gemini.js'
+import { geminiInterviewPreparationAI } from '@/actions/ai.js'
 import Loading from '@/components/atoms/loading'
 import Logo from '@/components/atoms/Logo'
 import { Badge } from '@/components/ui/badge'
@@ -47,7 +47,7 @@ const InterviewId = () => {
 
         const prompt = questionPrompt(interview)
         const body = { prompt: prompt }
-        let { content } = await geminiAI(body)
+        let { content } = await geminiInterviewPreparationAI(body)
 
         content = content.replace("```json", "").replace("```", "")
         let questions = JSON.parse(content)?.interviewQuestions

@@ -26,6 +26,12 @@ const Agents = [
         id: 1,
         name: "Interview Preparation",
         image: "/assets/banner-img/interview-preparation.avif",
-        url: "./agents/interview-preparation"
+        url: "/agents/interview-preparation"
+    },
+    {
+        id: 2,
+        name: "Text to Image",
+        image: "/assets/banner-img/text-to-image.avif",
+        url: "/agents/text-to-image"
     },
 ]

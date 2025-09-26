@@ -1,6 +1,6 @@
 "use client"
 
-import { geminiAI } from "@/actions/gemini";
+import { geminiInterviewPreparationAI } from "@/actions/ai";
 import Loading from "@/components/atoms/loading";
 import UserAvatar from "@/components/atoms/userAvatar";
 import { Ripple } from "@/components/magicui/ripple";
@@ -128,7 +128,7 @@ const StartInterview = () => {
 
         const prompt = answerFeedbackPrompt(data)
         const body = { prompt: prompt }
-        let { content } = await geminiAI(body)
+        let { content } = await geminiInterviewPreparationAI(body)
 
         if (content) {
             content = content.replace(/```json/g, "")
