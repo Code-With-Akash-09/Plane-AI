@@ -1,6 +1,6 @@
 import OpenAI from "openai";
 
 export const openAI = new OpenAI({
-    baseURL: 'https://openrouter.ai/api/v1',
+    baseURL: process.env.OPENROUTER_API_BASE_URL,
     apiKey: process.env.OPENROUTER_API_KEY,
 });
