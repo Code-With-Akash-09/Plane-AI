@@ -49,3 +49,15 @@ export const openAITextToImage = async (body) => {
     resp = await resp.json()
     return resp
 }
+
+export const getOpenRouterCredits = async () => {
+    let resp = await fetch("https://openrouter.ai/api/v1/credits",
+        {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`
+            }
+        });
+    resp = await resp.json();
+    return resp
+}

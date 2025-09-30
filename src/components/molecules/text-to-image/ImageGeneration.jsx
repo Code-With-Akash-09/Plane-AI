@@ -1,9 +1,10 @@
 "use client"
 
-import { openAITextToImage } from "@/actions/ai"
+import { getOpenRouterCredits, openAITextToImage } from "@/actions/ai"
 import { BorderBeam } from "@/components/atoms/BorderBeam"
 import Loading from "@/components/atoms/loading"
 import { PixelImage } from "@/components/magicui/PixelImage"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -12,7 +13,7 @@ import { createClient } from "@/lib/supabase/client"
 import { useAuth } from "@/providers/AuthProvider"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Download, Image, Stars } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import z from "zod"
@@ -23,6 +24,7 @@ const ImageGeneration = () => {
     const { user } = useAuth()
     const [loading, setLoading] = useState(false)
     const [image, setImage] = useState("")
+    const [credits, setCredits] = useState(0)
 
     const form = useForm({
         resolver: zodResolver(ImageGenerationSchema),
@@ -32,31 +34,42 @@ const ImageGeneration = () => {
         }
     })
 
+    const getCredits = async () => {
+        const { data: { total_credits, total_usage } } = await getOpenRouterCredits()
+        let remainingCredits = Math.floor(total_usage - total_credits)
+        setCredits(remainingCredits)
+    }
+
     const onSubmit = async (values) => {
-        setLoading(true)
-        const body = { prompt: values.prompt }
-        const { imageUrl } = await openAITextToImage(body)
-
-        if (imageUrl) {
-            const { error: supabaseError } = await supabase
-                .from('AIImages')
-                .insert([
-                    {
-                        uid: user.id,
-                        prompt: values.prompt,
-                        image_url: imageUrl
-                    },
-                ])
-                .select()
-
-            if (supabaseError) {
-                toast.error("Failed to save image to supabase")
-            }
-            setImage(imageUrl)
-            setLoading(false)
+        if (credits <= 0) {
+            toast.warning("You don't have enough credits to generate an image")
         }
-        setLoading(false)
-        toast.error("Failed to generate image")
+        else {
+            setLoading(true)
+            const body = { prompt: values.prompt }
+            const { imageUrl } = await openAITextToImage(body)
+
+            if (imageUrl) {
+                const { error: supabaseError } = await supabase
+                    .from('AIImages')
+                    .insert([
+                        {
+                            uid: user.id,
+                            prompt: values.prompt,
+                            image_url: imageUrl
+                        },
+                    ])
+                    .select()
+
+                if (supabaseError) {
+                    toast.error("Failed to save image to supabase")
+                }
+                setImage(imageUrl)
+                setLoading(false)
+            }
+            setLoading(false)
+            toast.error("Failed to generate image")
+        }
     }
 
     const downloadImage = async () => {
@@ -75,25 +88,36 @@ const ImageGeneration = () => {
         window.URL.revokeObjectURL(url)
     }
 
+    useEffect(() => {
+        user && getCredits()
+    }, [user])
+
     return (
-        <div className="flex w-full space-y-6 flex-1 max-h-60 lg:max-h-[900px] md:space-y-8 sm:p-4 md:p-6 lg:px-16 rounded-3xl relative">
+        <div className="flex flex-col w-full space-y-4 flex-1 max-h-60 lg:max-h-[900px] sm:p-4 md:p-6 lg:px-16 rounded-3xl relative">
+            <div className="flex w-full items-center justify-center">
+                <Badge
+                    variant={credits > 0 ? "default" : "destructive"}
+                >
+                    Credits: {credits}
+                </Badge>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 lg:gap-8 items-center justify-center w-full h-full max-w-7xl mx-auto">
-                <div className="flex w-full">
+                <div className="flex w-full md:h-full md:items-center md:justify-center">
                     <Form {...form}>
                         <form
                             onSubmit={form.handleSubmit(onSubmit)}
-                            className="w-full space-y-4 md:space-y-6"
+                            className="flex flex-col w-full md:h-[90%] space-y-4 md:space-y-6"
                         >
                             <FormField
                                 control={form.control}
                                 name="prompt"
                                 render={({ field }) => (
-                                    <FormItem className="h-80 w-full">
+                                    <FormItem className="h-80 md:h-full flex-grow w-full">
                                         <FormControl>
                                             <Textarea
                                                 type="text"
                                                 placeholder="Example: A magical forest with glowing mushrooms and fireflies....."
-                                                className={"min-h-32 max-h-80 w-full text-neutral-200"}
+                                                className={"min-h-32 max-h-80 md:max-h-full w-full text-neutral-200"}
                                                 {...field}
                                             />
                                         </FormControl>
@@ -123,10 +147,10 @@ const ImageGeneration = () => {
                         </form>
                     </Form>
                 </div>
-                <div className="flex w-full">
+                <div className="flex w-full md:h-full md:items-center md:justify-center">
                     {
                         image ? (
-                            <div className="flex relative rounded-2xl aspect-[3/4] max-w-md mx-auto w-full border border-neutral-800 group hover:border-primary transition-all bg-white/5 backdrop-blur-sm">
+                            <div className="flex relative rounded-2xl mx-auto w-full aspect-square md:h-[90%] border border-neutral-800 group hover:border-primary transition-all bg-white/5 backdrop-blur-sm">
                                 <PixelImage
                                     src={image}
                                     customGrid={{ rows: 4, cols: 6 }}
@@ -141,12 +165,12 @@ const ImageGeneration = () => {
                                 </Button>
                             </div>
                         ) : !loading ? (
-                            <div className="flex flex-col gap-6 relative rounded-2xl aspect-[3/4] max-w-md mx-auto w-full bg-white/5 backdrop-blur-sm items-center justify-center text-neutral-600 border border-neutral-800">
+                            <div className="flex flex-col gap-6 relative rounded-2xl mx-auto w-full aspect-square md:h-[90%] bg-white/5 backdrop-blur-sm items-center justify-center text-neutral-600 border border-neutral-800">
                                 <Image className="size-20" />
                                 Image Will be loaded here
                             </div>
                         ) : (
-                            <div className="flex flex-col gap-6 relative rounded-2xl aspect-[3/4] max-w-md mx-auto w-full bg-white/5 backdrop-blur-sm items-center justify-center text-neutral-600">
+                            <div className="flex flex-col gap-6 relative rounded-2xl mx-auto w-full aspect-square md:h-[90%] bg-white/5 backdrop-blur-sm items-center justify-center text-neutral-600">
                                 <Skeleton className="h-full w-full" />
                                 <Loading className="size-5 text-purple-500 absolute" />
                             </div>
