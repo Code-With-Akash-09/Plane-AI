@@ -78,22 +78,22 @@ const ImageGeneration = () => {
     return (
         <div className="flex w-full space-y-6 flex-1 max-h-60 lg:max-h-[900px] md:space-y-8 sm:p-4 md:p-6 lg:px-16 rounded-3xl relative">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 lg:gap-8 items-center justify-center w-full h-full max-w-7xl mx-auto">
-                <div className="flex w-full">
+                <div className="flex w-full md:h-full md:items-center md:justify-center">
                     <Form {...form}>
                         <form
                             onSubmit={form.handleSubmit(onSubmit)}
-                            className="w-full space-y-4 md:space-y-6"
+                            className="flex flex-col w-full md:h-[90%] space-y-4 md:space-y-6"
                         >
                             <FormField
                                 control={form.control}
                                 name="prompt"
                                 render={({ field }) => (
-                                    <FormItem className="h-80 w-full">
+                                    <FormItem className="h-80 md:h-full flex-grow w-full">
                                         <FormControl>
                                             <Textarea
                                                 type="text"
                                                 placeholder="Example: A magical forest with glowing mushrooms and fireflies....."
-                                                className={"min-h-32 max-h-80 w-full text-neutral-200"}
+                                                className={"min-h-32 max-h-80 md:max-h-full w-full text-neutral-200"}
                                                 {...field}
                                             />
                                         </FormControl>
@@ -123,10 +123,10 @@ const ImageGeneration = () => {
                         </form>
                     </Form>
                 </div>
-                <div className="flex w-full">
+                <div className="flex w-full md:h-full md:items-center md:justify-center">
                     {
                         image ? (
-                            <div className="flex relative rounded-2xl aspect-[3/4] max-w-md mx-auto w-full border border-neutral-800 group hover:border-primary transition-all bg-white/5 backdrop-blur-sm">
+                            <div className="flex relative rounded-2xl mx-auto w-full aspect-square md:h-[90%] border border-neutral-800 group hover:border-primary transition-all bg-white/5 backdrop-blur-sm">
                                 <PixelImage
                                     src={image}
                                     customGrid={{ rows: 4, cols: 6 }}
@@ -141,12 +141,12 @@ const ImageGeneration = () => {
                                 </Button>
                             </div>
                         ) : !loading ? (
-                            <div className="flex flex-col gap-6 relative rounded-2xl aspect-[3/4] max-w-md mx-auto w-full bg-white/5 backdrop-blur-sm items-center justify-center text-neutral-600 border border-neutral-800">
+                            <div className="flex flex-col gap-6 relative rounded-2xl mx-auto w-full aspect-square md:h-[90%] bg-white/5 backdrop-blur-sm items-center justify-center text-neutral-600 border border-neutral-800">
                                 <Image className="size-20" />
                                 Image Will be loaded here
                             </div>
                         ) : (
-                            <div className="flex flex-col gap-6 relative rounded-2xl aspect-[3/4] max-w-md mx-auto w-full bg-white/5 backdrop-blur-sm items-center justify-center text-neutral-600">
+                            <div className="flex flex-col gap-6 relative rounded-2xl mx-auto w-full aspect-square md:h-[90%] bg-white/5 backdrop-blur-sm items-center justify-center text-neutral-600">
                                 <Skeleton className="h-full w-full" />
                                 <Loading className="size-5 text-purple-500 absolute" />
                             </div>
