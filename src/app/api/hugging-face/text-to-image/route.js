@@ -1,19 +1,26 @@
 import cloudinary from "@/lib/cloudinary/client";
-import { openAI } from "@/lib/openai/client";
+import huggingFaceAPI from "@/lib/huggingFace/client";
 import { NextResponse } from "next/server";
 
 export async function POST(request) {
-    const { prompt } = await request.json();
     try {
-        const completion = await openAI.chat.completions.create({
-            model: "google/gemini-2.5-flash-image-preview",
-            messages: [
-                { role: "user", content: prompt }
-            ],
-            modalities: ["image", "text"],
-        })
-        const images = completion.choices[0].message?.images || []
-        const imageUrl = images[0]?.image_url?.url || null
+        const { prompt } = await request.json();
+
+        const result = await huggingFaceAPI.textToImage({
+            provider: "auto",
+            model: "black-forest-labs/FLUX.1-dev",
+            inputs: prompt,
+            parameters: {
+                num_inference_steps: 30,
+                guidance_scale: 8.5,
+                width: 768,
+                height: 768,
+            },
+        });
+
+        const buffer = Buffer.from(await result.arrayBuffer());
+        const base64 = buffer.toString("base64");
+        const imageUrl = `data:image/jpeg;base64,${base64}`;
 
         let uploadedImageUrl
         if (imageUrl) {
@@ -34,9 +41,10 @@ export async function POST(request) {
             { imageUrl: uploadedImageUrl },
             { status: 200 }
         )
+
     } catch (error) {
         return NextResponse.json(
-            { message: error.message },
+            { error: error.message },
             { status: error.code }
         );
     }

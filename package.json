@@ -9,11 +9,10 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@fal-ai/client": "^1.6.2",
-    "@fal-ai/server-proxy": "^1.1.1",
     "@google/genai": "^1.20.0",
     "@google/generative-ai": "^0.24.1",
     "@hookform/resolvers": "^5.2.1",
+    "@huggingface/inference": "^4.10.0",
     "@radix-ui/react-alert-dialog": "^1.1.15",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-dropdown-menu": "^2.1.16",
