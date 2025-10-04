@@ -1,44 +1,70 @@
-import AgentsHeader from "@/components/atoms/agents/AgentsHeader";
-import { createClient, getUser } from "@/lib/supabase/server";
+"use client";
+
+import Loading from "@/components/atoms/loading";
+import { createClient } from "@/lib/supabase/client";
+import { useAuth } from "@/providers/AuthProvider";
+import { useEffect, useState } from "react";
 import ImageCard from "./ImageCard";
 
-const ImageGallery = async () => {
+const ImageGallery = ({ limit = 20, page = 1, setCount, className }) => {
+    const { user } = useAuth();
+    const supabase = createClient();
 
-    const supabase = await createClient()
-    const user = await getUser()
+    const [images, setImages] = useState([]);
+    const [loading, setLoading] = useState(false);
 
-    let { data: AIImages } = await supabase
-        .from('AIImages')
-        .select('*')
-        .eq("uid", user.id)
-        .order("created_at", { ascending: false })
-        .limit(8);
+    const getImages = async () => {
+        if (!user) return;
+        setLoading(true);
 
-    if (!AIImages) {
-        return null
+        const from = (page - 1) * limit;
+        const to = from + limit - 1;
+
+        const { data, count } = await supabase
+            .from("AIImages")
+            .select("*", { count: "exact" })
+            .eq("uid", user.id)
+            .order("created_at", { ascending: false })
+            .range(from, to);
+
+        setImages(data || []);
+        setCount(count || 0);
+        setLoading(false);
+    };
+
+    useEffect(() => {
+        getImages();
+    }, [user, page, limit]);
+
+    if (loading) {
+        return (
+            <div className="flex size-full items-center justify-center">
+                <Loading className="text-primary" />
+            </div>
+        )
+    }
+
+    if (!images?.length) {
+        return (
+            <div className="flex size-full items-center justify-center">
+                <p className="text-neutral-500">No Images Found</p>
+            </div>
+        )
     }
 
     return (
-        <>
-            <div className="flex flex-col flex-grow-0 gap-6 w-full">
-                <AgentsHeader
-                    title={"Your Created Images"}
-                    description={"Review and analyze your past images."}
+        <div
+            className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full h-fit ${className}`}
+        >
+            {images.map((card, i) => (
+                <ImageCard
+                    key={i}
+                    download={true}
+                    card={card}
                 />
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
-                    {
-                        AIImages?.map((card, i) => (
-                            <ImageCard
-                                key={i}
-                                download={true}
-                                card={card}
-                            />
-                        ))
-                    }
-                </div>
-            </div>
-        </>
-    )
-}
+            ))}
+        </div>
+    );
+};
 
-export default ImageGallery
+export default ImageGallery;
