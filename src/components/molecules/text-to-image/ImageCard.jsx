@@ -32,7 +32,7 @@ const ImageCard = ({ card, download = false }) => {
                     fill
                     className="object-cover rounded-2xl"
                 />
-                <div className="absolute flex p-4 z-10 group-hover:opacity-100 opacity-0 group-hover:md:visible md:invisible top-0 inset-x-0 rounded-2xl transition-all ease-in-out bg-gradient-to-b h-full w-full from-transparent to-black/20 items-end justify-end">
+                <div className="absolute flex p-4 z-10 visible group-hover:md:opacity-100 md:opacity-0 group-hover:md:visible md:invisible top-0 inset-x-0 rounded-2xl transition-all ease-in-out bg-gradient-to-b h-full w-full from-transparent to-black/20 items-end justify-end">
                     {download && (
                         <Button
                             size={"icon"}

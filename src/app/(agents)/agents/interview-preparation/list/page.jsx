@@ -4,7 +4,7 @@ import GridInterviewList from "@/components/molecules/agents/GridInterviewList"
 const List = () => {
     return (
         <>
-            <div className="flex-1 px-4 py-4 w-full overflow-y-auto">
+            <div className="flex-1 px-4 py-4 w-full overflow-y-auto scrollbar-hide">
                 <div className="flex w-full flex-col max-w-7xl mx-auto h-full gap-4 md:gap-6">
                     <div className="flex flex-1 flex-col gap-4 md:gap-6 w-full p-4 md:p-6 rounded-3xl border border-neutral-800">
                         <AgentsHeader

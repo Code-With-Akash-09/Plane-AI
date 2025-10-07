@@ -11,6 +11,8 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useState } from "react";
 
@@ -24,9 +26,10 @@ const Limits = [
 ];
 
 const page = () => {
-    const [limit, setLimit] = useState(20);
+    const [limit, setLimit] = useState(10);
     const [page, setPage] = useState(1);
     const [count, setCount] = useState(0);
+    const isMobile = useIsMobile();
 
     const totalPages = Math.ceil(count / limit) || 1;
 
@@ -34,14 +37,13 @@ const page = () => {
     const handleNext = () => setPage((prev) => Math.min(prev + 1, totalPages));
 
     return (
-        <div className="flex-grow h-full px-4 py-4 w-full">
+        <div className="flex-grow h-full px-4 py-4 w-full overflow-hidden">
             <div className="flex w-full h-full flex-col max-w-7xl mx-auto gap-4 md:gap-6">
                 <AgentsHeader
                     title="Image Gallery"
                     description="Review and analyze your past images."
                 />
-
-                <div className="flex flex-grow overflow-y-auto w-full">
+                <div className={cn("flex flex-grow overflow-y-auto min-h-40 max-h-[calc(100vh-310px)] md:max-h-full w-full", isMobile ? "scrollbar-hide" : "scrollbar pr-3")}>
                     <ImageGallery
                         limit={limit}
                         page={page}
@@ -49,7 +51,7 @@ const page = () => {
                     />
                 </div>
 
-                <div className="flex justify-between items-center flex-grow-0 h-14 w-full rounded-2xl">
+                <div className="flex justify-between items-center flex-grow-0 w-full rounded-2xl">
                     <div className="flex items-center gap-3">
                         <Select
                             value={String(limit)}
