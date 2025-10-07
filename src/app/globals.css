@@ -264,7 +264,7 @@
 }
 
 .scrollbar-hide::-webkit-scrollbar {
-  display: none;
+  @apply hidden;
 }
 
 .scrollbar {
@@ -273,23 +273,21 @@
 }
 
 .scrollbar::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  @apply h-1.5 w-1.5;
 }
 
 .scrollbar::-webkit-scrollbar-track {
-  background: transparent;
+  @apply bg-transparent;
 }
 
 .scrollbar::-webkit-scrollbar-thumb {
-  background: #8880;
-  border-radius: 35px;
+  @apply bg-primary;
 }
 
 .scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  @apply bg-primary/80;
 }
 
 .scrollbar::-webkit-scrollbar-corner {
-  background: transparent;
+  @apply bg-transparent;
 }

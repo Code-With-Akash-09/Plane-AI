@@ -18,7 +18,7 @@ const InterviewResult = async ({ params }) => {
 
     return (
         <>
-            <div className="flex-1 md:px-4 py-4 w-full overflow-y-auto">
+            <div className="flex-1 md:px-4 py-4 w-full overflow-y-auto scrollbar-hide">
                 <div className="flex w-full max-w-7xl mx-auto h-auto">
                     <div className="flex flex-1 flex-col gap-4 md:gap-6 w-full">
                         <AgentsHeader

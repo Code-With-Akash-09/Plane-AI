@@ -8,7 +8,7 @@ import Link from "next/link"
 const page = () => {
     return (
         <>
-            <div className="flex-1 px-4 py-4 w-full overflow-y-auto">
+            <div className="flex-1 px-4 py-4 w-full overflow-y-auto scrollbar-hide">
                 <div className="flex w-full flex-col max-w-7xl mx-auto h-full gap-4 md:gap-6">
                     <div className="flex flex-col w-full lg:col-span-3 gap-4 md:gap-6">
                         <div className="w-full space-y-6 md:space-y-8 p-4 md:p-6 rounded-3xl border border-neutral-800 bg-gradient-to-r from-blue-800/40 via-neutral-900 to-purple-600/30">
