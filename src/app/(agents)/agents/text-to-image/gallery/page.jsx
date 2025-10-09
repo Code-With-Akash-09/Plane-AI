@@ -43,7 +43,7 @@ const page = () => {
                     title="Image Gallery"
                     description="Review and analyze your past images."
                 />
-                <div className={cn("flex flex-grow overflow-y-auto min-h-40 max-h-[calc(100vh-310px)] md:max-h-full w-full", isMobile ? "scrollbar-hide" : "scrollbar pr-3")}>
+                <div className={cn("flex flex-grow overflow-y-auto min-h-40 max-h-[calc(100vh-210px)] md:max-h-full w-full", isMobile ? "scrollbar-hide" : "scrollbar pr-3")}>
                     <ImageGallery
                         limit={limit}
                         page={page}
