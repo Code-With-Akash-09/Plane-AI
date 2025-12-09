@@ -34,4 +34,10 @@ const Agents = [
         image: "/assets/banner-img/text-to-image.avif",
         url: "/agents/text-to-image"
     },
+    {
+        id: 3,
+        name: "Background Removal",
+        image: "/assets/banner-img/text-to-image.avif",
+        url: "/agents/background-removal"
+    },
 ]
